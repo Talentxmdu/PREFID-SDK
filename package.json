@@ -1,0 +1,56 @@
+{
+    "name": "@prefid/sdk",
+    "version": "0.1.0",
+    "description": "Identity-aware AI memory infrastructure. Portable user preferences for any app or agent.",
+    "main": "./dist/index.js",
+    "module": "./dist/index.mjs",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "require": "./dist/index.js",
+            "import": "./dist/index.mjs"
+        }
+    },
+    "files": [
+        "dist"
+    ],
+    "scripts": {
+        "build": "tsup src/index.ts --format cjs,esm --dts --clean",
+        "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
+        "lint": "tsc --noEmit",
+        "test": "vitest run",
+        "prepublishOnly": "npm run build"
+    },
+    "keywords": [
+        "prefid",
+        "preferences",
+        "identity",
+        "ai",
+        "memory",
+        "oauth",
+        "personalization",
+        "agents",
+        "llm"
+    ],
+    "author": "PrefID Team",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Talentxmdu/PrefID.git",
+        "directory": "sdk"
+    },
+    "homepage": "https://pref-id.vercel.app",
+    "bugs": {
+        "url": "https://github.com/Talentxmdu/PrefID/issues"
+    },
+    "devDependencies": {
+        "tsup": "^8.0.0",
+        "typescript": "^5.3.0",
+        "vitest": "^1.0.0"
+    },
+    "peerDependencies": {},
+    "engines": {
+        "node": ">=16.0.0"
+    }
+}
