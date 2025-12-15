@@ -167,6 +167,14 @@ food.cuisines // string[] | undefined - fully typed!
 | `career_profile` | Industry, skills, goals |
 | `finance_profile` | Risk tolerance, investment interests |
 
+## Available Scopes
+
+| Scope | Access | Description |
+|-------|--------|-------------|
+| `preferences:read` | 🔵 Read | View user preferences |
+| `preferences:write` | 🟠 Write | Update user preferences |
+| `profile:read` | 🔵 Read | View basic user info (name, email) |
+
 ## Error Handling
 
 ```typescript
