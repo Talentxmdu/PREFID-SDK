@@ -181,6 +181,21 @@ See `/examples` for complete working examples:
 - `restaurant_recommender.py` - Full agent with all tools
 - `basic_agent.py` - Simple preference-aware agent
 
+## LangSmith Hub
+
+Standard prompts for PrefID agents are available on LangSmith Hub:
+
+| Prompt | Description |
+|--------|-------------|
+| **[talentxmdu/restaurant-recommender](https://smith.langchain.com/hub/talentxmdu/restaurant-recommender)** | Full agent prompt with AoT + Preference logic |
+| **[talentxmdu/basic-agent](https://smith.langchain.com/hub/talentxmdu/basic-agent)** | Minimal prompt for preference aware agents |
+
+Usage:
+```python
+from langchain import hub
+prompt = hub.pull("talentxmdu/restaurant-recommender")
+```
+
 ## Get PrefID Credentials
 
 1. Sign up at [pref-id.vercel.app](https://pref-id.vercel.app)

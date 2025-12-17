@@ -265,6 +265,29 @@ try {
 }
 ```
 
+## LangChain Integration
+
+Official integration for building preference-aware LangChain agents:
+
+```bash
+pip install langchain-prefid
+```
+
+```python
+from langchain_prefid import create_prefid_tools
+
+# 1. Create tools
+tools = create_prefid_tools(
+    client_id="...",
+    access_token="..."
+)
+
+# 2. Add to your agent
+agent = create_tool_calling_agent(llm, tools, prompt)
+```
+
+[LangChain package docs →](https://github.com/Talentxmdu/PREFID-SDK/tree/main/langchain-prefid)
+
 ## React Integration
 
 React hooks and components for seamless PrefID integration:
