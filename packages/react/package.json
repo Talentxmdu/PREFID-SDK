@@ -1,0 +1,52 @@
+{
+    "name": "@prefid/react",
+    "version": "0.1.0",
+    "description": "React hooks and components for PrefID - Identity-aware AI memory infrastructure",
+    "main": "./dist/index.js",
+    "module": "./dist/index.mjs",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "require": "./dist/index.js",
+            "import": "./dist/index.mjs"
+        }
+    },
+    "files": [
+        "dist"
+    ],
+    "scripts": {
+        "build": "tsup src/index.tsx --format cjs,esm --dts --clean --external react --external react-dom",
+        "dev": "tsup src/index.tsx --format cjs,esm --dts --watch --external react --external react-dom",
+        "lint": "tsc --noEmit"
+    },
+    "keywords": [
+        "prefid",
+        "react",
+        "hooks",
+        "preferences",
+        "ai",
+        "identity"
+    ],
+    "author": "PrefID Team",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Talentxmdu/PREFID-SDK.git",
+        "directory": "packages/react"
+    },
+    "homepage": "https://pref-id.vercel.app",
+    "peerDependencies": {
+        "react": "^17.0.0 || ^18.0.0",
+        "react-dom": "^17.0.0 || ^18.0.0"
+    },
+    "dependencies": {
+        "@prefid/sdk": "file:../.."
+    },
+    "devDependencies": {
+        "@types/react": "^18.2.0",
+        "@types/react-dom": "^18.2.0",
+        "tsup": "^8.0.0",
+        "typescript": "^5.3.0"
+    }
+}

@@ -267,7 +267,7 @@ try {
 
 ## React Integration
 
-For React apps, use `@prefid/react`:
+React hooks and components for seamless PrefID integration:
 
 ```bash
 npm install @prefid/react
@@ -279,19 +279,29 @@ import { PrefIDProvider, usePreferences, LoginButton } from '@prefid/react';
 function App() {
   return (
     <PrefIDProvider clientId="your-client-id">
+      <LoginButton />
       <MyComponent />
     </PrefIDProvider>
   );
 }
 
 function MyComponent() {
-  const { data: food, isLoading } = usePreferences('food_profile');
+  const { data: food, isLoading, update } = usePreferences('food_profile');
   
   if (isLoading) return <div>Loading...</div>;
   
-  return <div>Favorite cuisines: {food?.cuisines?.join(', ')}</div>;
+  return (
+    <div>
+      <p>Cuisines: {food?.cuisines?.join(', ')}</p>
+      <button onClick={() => update({ cuisines: ['Italian', 'Japanese'] })}>
+        Update
+      </button>
+    </div>
+  );
 }
 ```
+
+[React package docs →](https://github.com/Talentxmdu/PREFID-SDK/tree/main/packages/react)
 
 ## Getting a Client ID
 
