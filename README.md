@@ -125,6 +125,78 @@ console.log(result.content);
 console.log(result.preferences_used);
 ```
 
+## Thinking Profile (AoT)
+
+**NEW in v0.2.0:** Learn and apply thinking preferences that govern HOW AI responds.
+
+### Get Thinking Profile
+
+```typescript
+const profile = await prefid.getThinkingProfile();
+
+console.log(profile.atoms); 
+// [{ 
+//   atom: 'prefers_stepwise_reasoning',
+//   priority_bucket:' ordering',
+//   confidence: 0.7,
+//   lifecycle_state: 'active'
+// }]
+```
+
+### Learn Thinking Preferences
+
+```typescript
+// AI will learn your thinking preference
+await prefid.learnThought('I prefer step-by-step explanations');
+await prefid.learnThought('I like a recommendation, not multiple options');
+```
+
+### Get Agent Hints
+
+Clean contract for AI agents - no internals, just behavior values:
+
+```typescript
+const hints = await prefid.getAgentHints();
+
+console.log(hints);
+// {
+//   contract_version: 'v1',
+//   reasoning: 'stepwise',
+//   verbosity: 'default',
+//   decision: 'recommend',
+//   autonomy: 'default',
+//   description: 'Structure responses step-by-step. Give one clear recommendation.',
+//   atom_count: 2
+// }
+```
+
+### Introspection (Why)
+
+Get explanation of current AI behavior:
+
+```typescript
+const why = await prefid.getWhy();
+
+console.log(why.explanation);
+// "I'm responding this way because you prefer step-by-step explanations..."
+
+console.log(why.active_atoms);
+// [{ atom: 'prefers_stepwise_reasoning', bucket: 'ordering', effect: '...' }]
+```
+
+### Learning Budget
+
+Check usage status:
+
+```typescript
+const budget = await prefid.getBudgetStatus('thinking_profile');
+
+console.log(`${budget.remaining}/${budget.monthly_cap} atoms remaining`);
+// "8/10 atoms remaining"
+
+console.log(budget.cooldown_active); // false
+```
+
 ## Configuration
 
 ```typescript

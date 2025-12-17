@@ -1,6 +1,6 @@
 {
     "name": "@prefid/sdk",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "description": "Identity-aware AI memory infrastructure. Portable user preferences for any app or agent.",
     "main": "./dist/index.js",
     "module": "./dist/index.mjs",

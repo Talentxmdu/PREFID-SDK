@@ -97,6 +97,56 @@ export interface FinanceProfile {
 }
 
 // ============================================
+// Thinking Profile (AoT - Atom of Thought)
+// ============================================
+
+export interface ThinkingProfile {
+    atoms: ThinkingAtom[];
+    active_count: number;
+    profile_summary?: string;
+}
+
+export interface ThinkingAtom {
+    atom: string;
+    priority_bucket: 'ordering' | 'verbosity' | 'decision' | 'autonomy';
+    confidence: number;
+    lifecycle_state: 'candidate' | 'active' | 'weakening_active' | 'dormant';
+    last_confirmed?: string;
+    last_applied_at?: string;
+}
+
+export interface AgentHints {
+    contract_version: string;
+    generated_at: string;
+    reasoning: 'stepwise' | 'summary_first' | 'default';
+    verbosity: 'concise' | 'detailed' | 'examples' | 'default';
+    decision: 'recommend' | 'tradeoffs' | 'options' | 'default';
+    autonomy: 'proactive' | 'confirm_first' | 'clarify_first' | 'default';
+    description: string;
+    atom_count: number;
+}
+
+export interface BudgetStatus {
+    monthly_cap: number;
+    used_this_month: number;
+    remaining: number;
+    cooldown_days: number;
+    cooldown_active: boolean;
+    cooldown_until?: string;
+    last_learning?: string;
+}
+
+export interface WhyResponse {
+    explanation: string;
+    active_atoms: Array<{
+        atom: string;
+        bucket: string;
+        effect: string;
+    }>;
+    count: number;
+}
+
+// ============================================
 // Domain to Type Mapping
 // ============================================
 

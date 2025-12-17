@@ -218,6 +218,96 @@ export class PrefID {
     }
 
     // ============================================
+    // Thinking Profile (AoT) Methods
+    // ============================================
+
+    /**
+     * Get thinking profile (Atom of Thought)
+     * Returns atoms that govern HOW AI responds
+     * 
+     * @example
+     * ```typescript
+     * const profile = await prefid.getThinkingProfile();
+     * console.log(profile.atoms); // [{ atom: 'prefers_stepwise_reasoning', ... }]
+     * ```
+     */
+    async getThinkingProfile(): Promise<import('./types').ThinkingProfile> {
+        await this.ensureAuthenticated();
+
+        const response = await this.fetch(`/v1/preferences/${this.session!.user.id}/cognitive-profile`);
+        return response.json();
+    }
+
+    /**
+     * Learn a thinking preference
+     * Pass a natural language statement about how you want AI to respond
+     * 
+     * @example
+     * ```typescript
+     * await prefid.learnThought('I prefer step-by-step explanations');
+     * ```
+     */
+    async learnThought(thought: string): Promise<void> {
+        await this.ensureAuthenticated();
+
+        await this.fetch(`/v1/preferences/${this.session!.user.id}/learn-thought`, {
+            method: 'POST',
+            body: JSON.stringify({ thought })
+        });
+    }
+
+    /**
+     * Get agent hints (clean contract for agents)
+     * No internals - just behavior values
+     * 
+     * @example
+     * ```typescript
+     * const hints = await prefid.getAgentHints();
+     * // { reasoning: 'stepwise', decision: 'recommend', ... }
+     * ```
+     */
+    async getAgentHints(): Promise<import('./types').AgentHints> {
+        await this.ensureAuthenticated();
+
+        const response = await this.fetch(`/v1/preferences/${this.session!.user.id}/agent-hints`);
+        return response.json();
+    }
+
+    /**
+     * Get explanation of why AI is responding this way
+     * Opt-in introspection based on active atoms
+     * 
+     * @example
+     * ```typescript
+     * const why = await prefid.getWhy();
+     * console.log(why.explanation);
+     * ```
+     */
+    async getWhy(): Promise<import('./types').WhyResponse> {
+        await this.ensureAuthenticated();
+
+        const response = await this.fetch(`/v1/preferences/${this.session!.user.id}/why`);
+        return response.json();
+    }
+
+    /**
+     * Get learning budget status
+     * Shows monthly cap, usage, and cooldown state
+     * 
+     * @example
+     * ```typescript
+     * const budget = await prefid.getBudgetStatus('thinking_profile');
+     * console.log(`${budget.remaining}/${budget.monthly_cap} remaining`);
+     * ```
+     */
+    async getBudgetStatus(profileName: string = 'thinking_profile'): Promise<import('./types').BudgetStatus> {
+        await this.ensureAuthenticated();
+
+        const response = await this.fetch(`/v1/preferences/${this.session!.user.id}/budget/${profileName}`);
+        return response.json();
+    }
+
+    // ============================================
     // Internal Methods
     // ============================================
 

@@ -41,6 +41,13 @@ export type {
     CareerProfile,
     FinanceProfile,
 
+    // Thinking Profile (AoT) types
+    ThinkingProfile,
+    ThinkingAtom,
+    AgentHints,
+    BudgetStatus,
+    WhyResponse,
+
     // Config types
     PrefIDConfig,
     PrefIDUser,
