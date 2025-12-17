@@ -8,7 +8,12 @@ Usage:
 """
 
 from langchain import hub
+# from langchainhub import Client # Not needed
 from langchain_core.prompts import ChatPromptTemplate
+
+# Configuration
+# Replace 'talentxmdu' with your LangSmith handle if different
+HANDLE = "talentxmdu" 
 
 # 1. Restaurant Recommender Prompt
 restaurant_prompt = ChatPromptTemplate.from_messages([
@@ -43,13 +48,13 @@ if __name__ == "__main__":
         # Push to your handle (requires login)
         # Change 'talentxmdu' to your handle if different, or just 'prefid-sdk'
         
-        hub.push("prefid/restaurant-recommender", restaurant_prompt)
-        print("✅ Pushed: prefid/restaurant-recommender")
+        hub.push(f"{HANDLE}/restaurant-recommender", restaurant_prompt)
+        print(f"✅ Pushed: {HANDLE}/restaurant-recommender")
         
-        hub.push("prefid/basic-agent", basic_prompt)
-        print("✅ Pushed: prefid/basic-agent")
+        hub.push(f"{HANDLE}/basic-agent", basic_prompt)
+        print(f"✅ Pushed: {HANDLE}/basic-agent")
         
-        print("\nSuccess! View at https://smith.langchain.com/hub/prefid")
+        print(f"\nSuccess! View at https://smith.langchain.com/hub/{HANDLE}")
     except Exception as e:
         print(f"\nError pushing to hub: {e}")
         print("Did you login? Run: langchain hub login")
