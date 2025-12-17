@@ -37,8 +37,7 @@
     "license": "MIT",
     "repository": {
         "type": "git",
-        "url": "https://github.com/Talentxmdu/PrefID.git",
-        "directory": "sdk"
+        "url": "https://github.com/Talentxmdu/PREFID-SDK.git"
     },
     "homepage": "https://pref-id.vercel.app",
     "bugs": {

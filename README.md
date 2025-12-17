@@ -300,11 +300,81 @@ function MyComponent() {
 4. Create an OAuth Application
 5. Copy your Client ID
 
+## Use Cases
+
+PrefID powers personalization across multiple domains:
+
+- **🎵 Music Apps** - Spotify, Apple Music integrations for personalized recommendations
+- **🍕 Food Delivery** - DoorDash, Uber Eats for dietary preferences and cuisine matching
+- **✈️ Travel Booking** - Expedia, Airbnb for travel style and accommodation preferences
+- **💻 Developer Tools** - IDE plugins, code assistants with coding style preferences
+- **💰 Finance Apps** - Investment platforms with risk tolerance and goals
+- **📈 Career Platforms** - LinkedIn, job boards with career goals and work style
+
+[See all use cases →](https://pref-id.vercel.app/use-cases)
+
+## Semantic Firewall™
+
+PrefID uses a **Semantic Firewall™** to prevent memory corruption:
+
+- ✅ **Domain Isolation** - Music can't leak into finance
+- ✅ **Deterministic Routing** - 335+ curated terms mapped to domains
+- ✅ **No Hallucination** - Overrides LLM guessing with vocabulary registry
+- ✅ **Zero Cross-Contamination** - AR Rahman stays in `music_preferences`, not `food_profile`
+
+Unlike memory APIs that store unstructured blobs, PrefID enforces strict boundaries.
+
+## Integrations
+
+### CustomGPT
+
+Add PrefID to ChatGPT:
+
+🤖 **[PrefID Assistant](https://chatgpt.com/g/g-694008c8de188191bebc93b737d40af3-prefid-assistant)** - Official ChatGPT integration
+
+### MCP (Model Context Protocol)
+
+Use PrefID with Claude Desktop:
+
+```bash
+npm install -g @prefid/mcp
+```
+
+[PrefID MCP Server →](https://github.com/Talentxmdu/PrefID-MCP)
+
+### AI Agents
+
+PrefID works with any AI agent framework:
+- LangChain
+- AutoGPT
+- CrewAI
+- Semantic Kernel
+
+### Shopify Apps
+
+Build personalized Shopify experiences with PrefID's e-commerce integrations.
+
+## Stats
+
+🎉 **104 weekly downloads** - Launched 3 days ago!
+
+Thank you to our early adopters building with PrefID.
+
+## Support
+
+Questions? Reach out:
+
+📧 **sriram.srinivasdesikan@gmail.com**
+
 ## Links
 
-- [Documentation](https://pref-id.vercel.app/docs)
-- [GitHub](https://github.com/Talentxmdu/PrefID)
-- [API Reference](https://prefid-production.up.railway.app/docs)
+- 🌐 [Website](https://pref-id.vercel.app)
+- 📖 [Documentation](https://pref-id.vercel.app/docs)
+- 💬 [Why PrefID?](https://pref-id.vercel.app/why)
+- 💰 [Pricing](https://pref-id.vercel.app/pricing)
+- 🐙 [GitHub (SDK)](https://github.com/Talentxmdu/PREFID-SDK)
+- 🤖 [CustomGPT](https://chatgpt.com/g/g-694008c8de188191bebc93b737d40af3-prefid-assistant)
+- 🔌 [MCP Server](https://github.com/Talentxmdu/PrefID-MCP)
 
 ## License
 
