@@ -340,7 +340,7 @@ Use PrefID with Claude Desktop:
 npm install -g @prefid/mcp
 ```
 
-[PrefID MCP Server →](https://github.com/Talentxmdu/PrefID-MCP)
+[Setup Guide →](https://github.com/Talentxmdu/PREFID-SDK/tree/main/mcp)
 
 ### AI Agents
 
@@ -374,7 +374,7 @@ Questions? Reach out:
 - 💰 [Pricing](https://pref-id.vercel.app/pricing)
 - 🐙 [GitHub (SDK)](https://github.com/Talentxmdu/PREFID-SDK)
 - 🤖 [CustomGPT](https://chatgpt.com/g/g-694008c8de188191bebc93b737d40af3-prefid-assistant)
-- 🔌 [MCP Server](https://github.com/Talentxmdu/PrefID-MCP)
+- 🔌 [MCP Server](https://github.com/Talentxmdu/PREFID-SDK/tree/main/mcp)
 
 ## License
 
