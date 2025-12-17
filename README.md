@@ -1,6 +1,7 @@
 # @prefid/sdk
 
-> Identity-aware AI memory infrastructure. Portable user preferences for any app or agent.
+> Identity-aware Cognitive Infrastructure. We replace raw memory with structured, verified user context.
+> The Cognitive Identity Layer for AI Agents. Secure, portable context that governs how AI behaves
 
 [![npm version](https://badge.fury.io/js/@prefid%2Fsdk.svg)](https://www.npmjs.com/package/@prefid/sdk)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
