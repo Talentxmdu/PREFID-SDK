@@ -1,0 +1,222 @@
+---
+title: Preference Domains
+description: 'Deep dive into each preference domain'
+---
+
+## Overview
+
+PrefID organizes user preferences into **domains** — logical groupings that represent different aspects of identity. Each domain has its own schema and can be accessed independently via scopes.
+
+## Music Preferences
+
+**Scope**: `music_preferences`
+
+Captures musical tastes, listening habits, and streaming preferences.
+
+### Schema
+
+```json
+{
+  "favorite_artists": ["string"],
+  "genres": ["string"],
+  "streaming_service": "Spotify|Apple Music|YouTube Music|Other",
+  "listening_contexts": {
+    "work": ["string"],
+    "workout": ["string"],
+    "relax": ["string"]
+  },
+  "decade_preferences": ["string"],
+  "instruments": ["string"]
+}
+```
+
+### Example
+
+```json
+{
+  "favorite_artists": ["AR Rahman", "Coldplay", "Daft Punk"],
+  "genres": ["Indian Classical", "Electronic", "Alternative"],
+  "streaming_service": "Spotify",
+  "listening_contexts": {
+    "work": ["Lo-fi", "Instrumental"],
+    "workout": ["EDM", "Hip Hop"]
+  }
+}
+```
+
+---
+
+## Food Profile
+
+**Scope**: `food_profile`
+
+Dietary preferences, restrictions, and culinary tastes.
+
+### Schema
+
+```json
+{
+  "dietary_preference": "vegetarian|vegan|pescatarian|omnivore",
+  "allergies": ["string"],
+  "cuisines": ["string"],
+  "spice_tolerance": "mild|medium|hot|extra_hot",
+  "cooking_skill": "beginner|intermediate|advanced",
+  "meal_preferences": {
+    "breakfast": ["string"],
+    "lunch": ["string"],
+    "dinner": ["string"]
+  }
+}
+```
+
+### Example
+
+```json
+{
+  "dietary_preference": "vegetarian",
+  "allergies": ["peanuts", "shellfish"],
+  "cuisines": ["South Indian", "Italian", "Mexican"],
+  "spice_tolerance": "hot",
+  "cooking_skill": "intermediate"
+}
+```
+
+---
+
+## Travel Profile
+
+**Scope**: `travel_profile`
+
+Travel preferences, loyalty programs, and destination preferences.
+
+### Schema
+
+```json
+{
+  "preferred_airlines": ["string"],
+  "preferred_hotels": ["string"],
+  "seat_preference": "window|aisle|middle",
+  "class_preference": "economy|premium_economy|business|first",
+  "travel_style": "budget|moderate|luxury",
+  "destination_types": ["string"],
+  "passport_country": "string"
+}
+```
+
+### Example
+
+```json
+{
+  "preferred_airlines": ["Emirates", "Singapore Airlines"],
+  "seat_preference": "window",
+  "class_preference": "business",
+  "travel_style": "moderate",
+  "destination_types": ["beach", "historical", "nature"]
+}
+```
+
+---
+
+## Coding Profile
+
+**Scope**: `coding_profile`
+
+Programming preferences, tools, and coding style.
+
+### Schema
+
+```json
+{
+  "languages": ["string"],
+  "frameworks": ["string"],
+  "editor": "VS Code|Cursor|Vim|Neovim|IntelliJ|Other",
+  "theme": "dark|light",
+  "indentation": "tabs|spaces",
+  "indent_size": 2|4,
+  "style": "functional|oop|mixed",
+  "testing_framework": "string",
+  "package_manager": "npm|yarn|pnpm|bun"
+}
+```
+
+### Example
+
+```json
+{
+  "languages": ["TypeScript", "Python", "Go"],
+  "frameworks": ["Next.js", "FastAPI", "React"],
+  "editor": "Cursor",
+  "theme": "dark",
+  "indentation": "spaces",
+  "indent_size": 2,
+  "style": "functional"
+}
+```
+
+---
+
+## Finance Profile
+
+**Scope**: `finance_profile`
+
+Investment style and financial preferences.
+
+### Schema
+
+```json
+{
+  "risk_tolerance": "conservative|moderate|aggressive",
+  "investment_style": "passive|active|mixed",
+  "preferred_assets": ["string"],
+  "time_horizon": "short|medium|long",
+  "currency": "string"
+}
+```
+
+### Example
+
+```json
+{
+  "risk_tolerance": "moderate",
+  "investment_style": "passive",
+  "preferred_assets": ["stocks", "bonds", "real_estate"],
+  "time_horizon": "long",
+  "currency": "USD"
+}
+```
+
+---
+
+## General Profile
+
+**Scope**: `general_profile`
+
+General preferences and communication style.
+
+### Schema
+
+```json
+{
+  "name": "string",
+  "timezone": "string",
+  "language": "string",
+  "communication_style": "formal|casual|technical",
+  "interests": ["string"],
+  "work_hours": {
+    "start": "string",
+    "end": "string"
+  }
+}
+```
+
+### Example
+
+```json
+{
+  "name": "Sriram",
+  "timezone": "Asia/Kolkata",
+  "language": "en",
+  "communication_style": "casual",
+  "interests": ["technology", "music", "travel"]
+}
+```

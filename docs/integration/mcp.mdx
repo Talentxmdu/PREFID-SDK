@@ -1,0 +1,190 @@
+---
+title: MCP Integration
+description: 'Use PrefID with Claude Desktop, Cursor, and MCP-enabled tools'
+---
+
+## What is MCP?
+
+The **Model Context Protocol (MCP)** is a standard for connecting AI models to external data sources. PrefID provides an MCP server that lets you access user preferences directly from Claude Desktop, Cursor, and other MCP-compatible tools.
+
+## Quick Setup for Claude Desktop
+
+<Steps>
+  <Step title="Install the MCP Server">
+    ```bash
+    npm install -g @prefid/mcp-server
+    ```
+  </Step>
+  
+  <Step title="Configure Claude Desktop">
+    Add to your Claude Desktop config (`~/Library/Application Support/Claude/claude_desktop_config.json`):
+    
+    ```json
+    {
+      "mcpServers": {
+        "prefid": {
+          "command": "npx",
+          "args": ["@prefid/mcp-server"],
+          "env": {
+            "PREFID_API_KEY": "your-api-key"
+          }
+        }
+      }
+    }
+    ```
+  </Step>
+  
+  <Step title="Restart Claude Desktop">
+    Restart Claude Desktop to load the MCP server.
+  </Step>
+</Steps>
+
+## Available Tools
+
+Once configured, Claude can use these PrefID tools:
+
+### `get_preferences`
+
+Fetch user preferences for a specific domain.
+
+```
+Use the get_preferences tool to get my music preferences
+```
+
+### `get_agent_hints`
+
+Get optimized hints for context injection.
+
+```
+Use get_agent_hints to understand my preferences before recommending
+```
+
+### `search_preferences`
+
+Search across all preference domains.
+
+```
+Search my preferences for anything related to "vegetarian"
+```
+
+## Cursor Setup
+
+For Cursor IDE, add to your `.cursor/mcp.json`:
+
+```json
+{
+  "servers": {
+    "prefid": {
+      "command": "npx",
+      "args": ["@prefid/mcp-server"],
+      "env": {
+        "PREFID_API_KEY": "your-api-key"
+      }
+    }
+  }
+}
+```
+
+## Self-Hosted MCP Server
+
+Run your own MCP server:
+
+```bash
+# Clone the server
+git clone https://github.com/prefid/mcp-server
+cd mcp-server
+
+# Install dependencies
+npm install
+
+# Configure
+cp .env.example .env
+# Edit .env with your credentials
+
+# Run
+npm start
+```
+
+## MCP Server Configuration
+
+Environment variables:
+
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `PREFID_API_KEY` | Your PrefID API key | Yes |
+| `PREFID_USER_ID` | Default user ID | No |
+| `PREFID_BASE_URL` | Custom API URL | No |
+
+## Example Conversations
+
+### With Claude Desktop
+
+**User**: "Recommend me some songs for my morning commute"
+
+**Claude**: *Uses get_preferences tool for music_preferences*
+
+"Based on your preferences for AR Rahman and Indian classical music, here are some morning commute songs:
+1. 'Jai Ho' - AR Rahman
+2. 'Tum Hi Ho' - Arijit Singh
+..."
+
+### With Cursor
+
+**User**: "Refactor this code to match my coding style"
+
+**Cursor**: *Uses get_preferences tool for coding_profile*
+
+"Based on your coding preferences (TypeScript, functional style, Prettier formatting), here's the refactored code..."
+
+## Building Custom MCP Tools
+
+Create your own MCP tools that use PrefID:
+
+```typescript
+import { Server } from '@modelcontextprotocol/sdk/server/index.js';
+import { PrefID } from '@prefid/sdk';
+
+const server = new Server({
+  name: 'my-prefid-tool',
+  version: '1.0.0',
+});
+
+const prefid = new PrefID({
+  apiKey: process.env.PREFID_API_KEY
+});
+
+server.setRequestHandler('tools/call', async (request) => {
+  if (request.params.name === 'personalized_recommendation') {
+    const prefs = await prefid.getPreferences('music_preferences');
+    
+    // Use preferences to generate recommendations
+    return {
+      content: [{ 
+        type: 'text', 
+        text: `Based on love for ${prefs.preferences.favorite_artists[0]}...` 
+      }]
+    };
+  }
+});
+```
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="MCP server not connecting">
+    - Check that the server is running: `npx @prefid/mcp-server --test`
+    - Verify your API key is correct
+    - Restart Claude Desktop / Cursor
+  </Accordion>
+  
+  <Accordion title="Tools not appearing">
+    - Check Claude Desktop logs: `~/Library/Logs/Claude/`
+    - Verify config JSON syntax is valid
+    - Ensure MCP server is in PATH
+  </Accordion>
+  
+  <Accordion title="Permission errors">
+    - Verify your API key has the required scopes
+    - Check that the user has granted access
+  </Accordion>
+</AccordionGroup>

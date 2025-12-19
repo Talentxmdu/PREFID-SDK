@@ -1,0 +1,117 @@
+---
+title: API Introduction
+description: 'PrefID REST API Reference'
+---
+
+## Base URL
+
+All API requests should be made to:
+
+```
+https://api.prefid.dev/v1
+```
+
+## Authentication
+
+All API requests require an access token obtained via OAuth 2.0:
+
+```bash
+curl -X GET "https://api.prefid.dev/v1/preferences" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+```
+
+## Rate Limits
+
+| Plan | Rate Limit |
+|------|------------|
+| Free | 100 requests/minute |
+| Pro | 1,000 requests/minute |
+| Enterprise | Custom |
+
+Rate limit headers are included in responses:
+
+```
+X-RateLimit-Limit: 100
+X-RateLimit-Remaining: 95
+X-RateLimit-Reset: 1703012400
+```
+
+## Response Format
+
+All responses are JSON:
+
+```json
+{
+  "success": true,
+  "data": { ... },
+  "meta": {
+    "request_id": "req_abc123",
+    "timestamp": "2024-12-19T10:30:00Z"
+  }
+}
+```
+
+## Error Responses
+
+```json
+{
+  "success": false,
+  "error": {
+    "code": "UNAUTHORIZED",
+    "message": "Invalid or expired access token",
+    "details": null
+  },
+  "meta": {
+    "request_id": "req_abc123"
+  }
+}
+```
+
+### Error Codes
+
+| Code | HTTP Status | Description |
+|------|-------------|-------------|
+| `UNAUTHORIZED` | 401 | Invalid or expired token |
+| `FORBIDDEN` | 403 | Insufficient scopes |
+| `NOT_FOUND` | 404 | Resource not found |
+| `RATE_LIMITED` | 429 | Too many requests |
+| `INTERNAL_ERROR` | 500 | Server error |
+
+## Pagination
+
+List endpoints support pagination:
+
+```bash
+GET /v1/preferences/atoms?limit=20&offset=0
+```
+
+Response includes pagination info:
+
+```json
+{
+  "data": [...],
+  "pagination": {
+    "limit": 20,
+    "offset": 0,
+    "total": 150,
+    "has_more": true
+  }
+}
+```
+
+## Endpoints Overview
+
+<CardGroup cols={2}>
+  <Card title="Preferences" icon="database" href="/api-reference/preferences">
+    Get and update user preferences
+  </Card>
+  <Card title="Domains" icon="folder" href="/api-reference/domains">
+    List available domains
+  </Card>
+  <Card title="Agent Hints" icon="robot" href="/api-reference/agent-hints">
+    Get AI-optimized hints
+  </Card>
+  <Card title="Authentication" icon="key" href="/api-reference/authentication">
+    OAuth token endpoints
+  </Card>
+</CardGroup>

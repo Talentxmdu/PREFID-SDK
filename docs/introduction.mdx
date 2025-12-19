@@ -1,0 +1,119 @@
+---
+title: Introduction
+description: 'Welcome to PrefID - The Identity Layer for AI'
+---
+
+<img
+  className="block dark:hidden"
+  src="/images/hero-light.png"
+  alt="PrefID Hero"
+/>
+<img
+  className="hidden dark:block"
+  src="/images/hero-dark.png"
+  alt="PrefID Hero Dark"
+/>
+
+## What is PrefID?
+
+PrefID is an **identity infrastructure platform** that creates a portable preference graph — a structured representation of who you are, what you like, and how you work.
+
+<CardGroup cols={2}>
+  <Card
+    title="Quick Start"
+    icon="rocket"
+    href="/quickstart"
+  >
+    Get up and running in 5 minutes
+  </Card>
+  <Card
+    title="Core Concepts"
+    icon="book"
+    href="/concepts"
+  >
+    Understand how PrefID works
+  </Card>
+  <Card
+    title="OAuth Integration"
+    icon="key"
+    href="/integration/oauth"
+  >
+    Authenticate users securely
+  </Card>
+  <Card
+    title="API Reference"
+    icon="code"
+    href="/api-reference/introduction"
+  >
+    Complete endpoint documentation
+  </Card>
+</CardGroup>
+
+## The Problem We Solve
+
+Every AI we interact with starts from scratch. **ChatGPT doesn't know what Claude knows.** Your coding assistant doesn't understand your music preferences.
+
+We spend hours re-explaining ourselves, re-prompting the same context, again and again.
+
+## The Solution
+
+PrefID provides a **universal identity layer** that travels with you across every AI:
+
+<Steps>
+  <Step title="User authenticates via OAuth">
+    Users grant your app permission to access their preference graph.
+  </Step>
+  <Step title="Fetch domain-specific preferences">
+    Request only the domains you need: music, travel, coding, etc.
+  </Step>
+  <Step title="Personalize your AI">
+    Inject preferences into your prompts for context-aware responses.
+  </Step>
+</Steps>
+
+## Available Domains
+
+PrefID organizes preferences into domain-specific graphs:
+
+| Domain | Description |
+|--------|-------------|
+| `music_preferences` | Favorite artists, genres, streaming habits |
+| `food_profile` | Dietary restrictions, cuisines, allergies |
+| `travel_profile` | Airlines, hotels, travel style preferences |
+| `coding_profile` | Languages, frameworks, editor preferences |
+| `finance_profile` | Investment style, risk tolerance |
+| `general_profile` | Name, communication style, interests |
+
+## Quick Example
+
+```bash
+curl -X GET "https://api.prefid.dev/v1/preferences/music_preferences" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+```
+
+```json Response
+{
+  "domain": "music_preferences",
+  "preferences": {
+    "favorite_artists": ["AR Rahman", "Coldplay"],
+    "genres": ["Indian Classical", "Electronic"],
+    "streaming_service": "Spotify"
+  },
+  "confidence": 0.92,
+  "last_updated": "2024-12-19T10:30:00Z"
+}
+```
+
+## Why PrefID?
+
+<CardGroup cols={3}>
+  <Card title="User Ownership" icon="shield">
+    Your data belongs to you. Full control over what's shared.
+  </Card>
+  <Card title="Transparency" icon="eye">
+    See exactly what's stored. No black boxes.
+  </Card>
+  <Card title="Zero Friction" icon="bolt">
+    AI understands you instantly. No onboarding quizzes.
+  </Card>
+</CardGroup>

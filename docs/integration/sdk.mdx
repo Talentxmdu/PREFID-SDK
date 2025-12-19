@@ -1,0 +1,210 @@
+---
+title: SDK Integration
+description: 'Use the PrefID SDK for quick integration'
+---
+
+## Installation
+
+<CodeGroup>
+
+```bash npm
+npm install @prefid/sdk
+```
+
+```bash yarn
+yarn add @prefid/sdk
+```
+
+```bash pnpm
+pnpm add @prefid/sdk
+```
+
+</CodeGroup>
+
+## Quick Start
+
+```typescript
+import { PrefID } from '@prefid/sdk';
+
+const prefid = new PrefID({
+  clientId: process.env.PREFID_CLIENT_ID,
+  clientSecret: process.env.PREFID_CLIENT_SECRET,
+  redirectUri: 'http://localhost:3000/callback'
+});
+```
+
+## Authentication
+
+### Generate Auth URL
+
+```typescript
+const authUrl = prefid.getAuthorizationUrl({
+  scopes: ['preferences:read', 'music_preferences'],
+  state: 'your-csrf-token'
+});
+
+// Redirect user to authUrl
+```
+
+### Handle Callback
+
+```typescript
+// After user is redirected back
+const tokens = await prefid.exchangeCode(authCode, codeVerifier);
+
+// Store tokens
+const { accessToken, refreshToken, expiresIn } = tokens;
+```
+
+### Refresh Tokens
+
+```typescript
+const newTokens = await prefid.refreshToken(refreshToken);
+```
+
+## Fetching Preferences
+
+### Get Single Domain
+
+```typescript
+const musicPrefs = await prefid.getPreferences('music_preferences', {
+  accessToken: tokens.accessToken
+});
+
+console.log(musicPrefs);
+// {
+//   domain: "music_preferences",
+//   preferences: {
+//     favorite_artists: ["AR Rahman", "Coldplay"],
+//     genres: ["Indian Classical", "Electronic"]
+//   },
+//   confidence: 0.92
+// }
+```
+
+### Get Multiple Domains
+
+```typescript
+const prefs = await prefid.getPreferences(['music_preferences', 'food_profile'], {
+  accessToken: tokens.accessToken
+});
+
+// Returns array of preference objects
+```
+
+### Get All Preferences
+
+```typescript
+const allPrefs = await prefid.getAllPreferences({
+  accessToken: tokens.accessToken
+});
+```
+
+## Agent Hints
+
+Get optimized hints for AI context injection:
+
+```typescript
+const hints = await prefid.getAgentHints({
+  accessToken: tokens.accessToken,
+  domains: ['music_preferences', 'food_profile'],
+  maxTokens: 100
+});
+
+console.log(hints);
+// {
+//   hints: [
+//     "User loves AR Rahman and Indian classical music",
+//     "Prefers vegetarian food, allergic to peanuts"
+//   ],
+//   tokenCount: 45
+// }
+```
+
+## Using with AI Models
+
+### With Vercel AI SDK
+
+```typescript
+import { generateText } from 'ai';
+import { openai } from '@ai-sdk/openai';
+
+const hints = await prefid.getAgentHints({
+  accessToken: userTokens.accessToken,
+  domains: ['music_preferences']
+});
+
+const result = await generateText({
+  model: openai('gpt-4'),
+  system: `You are a music recommendation assistant. ${hints.hints.join('. ')}`,
+  prompt: userMessage
+});
+```
+
+### With LangChain
+
+```typescript
+import { ChatOpenAI } from '@langchain/openai';
+import { SystemMessage, HumanMessage } from '@langchain/core/messages';
+
+const hints = await prefid.getAgentHints({
+  accessToken: userTokens.accessToken
+});
+
+const model = new ChatOpenAI({ modelName: 'gpt-4' });
+
+const response = await model.invoke([
+  new SystemMessage(`User context: ${hints.hints.join('. ')}`),
+  new HumanMessage(userMessage)
+]);
+```
+
+## Error Handling
+
+```typescript
+try {
+  const prefs = await prefid.getPreferences('music_preferences', {
+    accessToken: tokens.accessToken
+  });
+} catch (error) {
+  if (error.code === 'TOKEN_EXPIRED') {
+    // Refresh the token
+    const newTokens = await prefid.refreshToken(tokens.refreshToken);
+  } else if (error.code === 'INSUFFICIENT_SCOPE') {
+    // Request additional scopes
+  } else {
+    console.error('PrefID error:', error.message);
+  }
+}
+```
+
+## TypeScript Types
+
+The SDK is fully typed:
+
+```typescript
+import type { 
+  Preferences, 
+  AgentHints, 
+  Token,
+  PrefIDError 
+} from '@prefid/sdk';
+
+const prefs: Preferences = await prefid.getPreferences('music_preferences');
+const hints: AgentHints = await prefid.getAgentHints();
+```
+
+## Configuration Options
+
+```typescript
+const prefid = new PrefID({
+  clientId: 'your-client-id',
+  clientSecret: 'your-client-secret',
+  redirectUri: 'http://localhost:3000/callback',
+  
+  // Optional
+  baseUrl: 'https://api.prefid.dev',  // Custom API URL
+  timeout: 10000,                      // Request timeout in ms
+  retries: 3,                          // Number of retries
+});
+```

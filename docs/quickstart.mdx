@@ -1,0 +1,133 @@
+---
+title: Quick Start
+description: 'Get PrefID integrated in 5 minutes'
+---
+
+## Prerequisites
+
+- A PrefID account ([sign up free](https://pref-id.vercel.app/onboarding))
+- An OAuth application (created in [Developer Portal](https://pref-id.vercel.app/developer))
+- Node.js 18+ or Python 3.9+
+
+## Step 1: Create an OAuth Application
+
+<Steps>
+  <Step title="Go to Developer Portal">
+    Navigate to [prefid.dev/developer](https://pref-id.vercel.app/developer) and log in.
+  </Step>
+  <Step title="Create New Application">
+    Click "Create OAuth Application" and fill in:
+    - **App Name**: Your application name
+    - **Redirect URI**: `http://localhost:3000/callback` (for development)
+    - **Scopes**: Select the domains you need (e.g., `preferences:read`)
+  </Step>
+  <Step title="Save Credentials">
+    Copy your `client_id` and `client_secret`. The secret is only shown once!
+  </Step>
+</Steps>
+
+## Step 2: Install the SDK
+
+<CodeGroup>
+
+```bash npm
+npm install @prefid/sdk
+```
+
+```bash yarn
+yarn add @prefid/sdk
+```
+
+```bash pnpm
+pnpm add @prefid/sdk
+```
+
+</CodeGroup>
+
+## Step 3: Initialize PrefID
+
+```typescript
+import { PrefID } from '@prefid/sdk';
+
+const prefid = new PrefID({
+  clientId: process.env.PREFID_CLIENT_ID,
+  clientSecret: process.env.PREFID_CLIENT_SECRET,
+  redirectUri: 'http://localhost:3000/callback'
+});
+```
+
+## Step 4: Authenticate Users
+
+```typescript
+// Generate authorization URL
+const authUrl = prefid.getAuthorizationUrl({
+  scopes: ['preferences:read', 'music_preferences'],
+  state: 'random-state-string'
+});
+
+// Redirect user to authUrl
+// After user approves, they're redirected to your callback URL
+
+// Handle callback
+app.get('/callback', async (req, res) => {
+  const { code, state } = req.query;
+  
+  // Exchange code for tokens
+  const tokens = await prefid.exchangeCode(code);
+  
+  // Store tokens securely
+  // tokens.access_token, tokens.refresh_token
+});
+```
+
+## Step 5: Fetch Preferences
+
+```typescript
+// Get user preferences
+const musicPrefs = await prefid.getPreferences('music_preferences', {
+  accessToken: tokens.access_token
+});
+
+console.log(musicPrefs);
+// {
+//   domain: "music_preferences",
+//   preferences: {
+//     favorite_artists: ["AR Rahman", "Coldplay"],
+//     genres: ["Indian Classical", "Electronic"]
+//   }
+// }
+```
+
+## Step 6: Use with AI
+
+```typescript
+import { generateText } from 'ai';
+import { openai } from '@ai-sdk/openai';
+
+// Fetch preferences
+const prefs = await prefid.getPreferences('music_preferences');
+
+// Use in AI prompt
+const result = await generateText({
+  model: openai('gpt-4'),
+  system: `User's music preferences: ${JSON.stringify(prefs.preferences)}`,
+  prompt: 'Recommend 5 songs for my road trip playlist'
+});
+```
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Core Concepts" icon="book" href="/concepts">
+    Deep dive into how PrefID works
+  </Card>
+  <Card title="OAuth Guide" icon="key" href="/integration/oauth">
+    Complete OAuth 2.0 implementation
+  </Card>
+  <Card title="MCP Integration" icon="puzzle" href="/integration/mcp">
+    Use with Claude Desktop & Cursor
+  </Card>
+  <Card title="API Reference" icon="code" href="/api-reference/introduction">
+    Full endpoint documentation
+  </Card>
+</CardGroup>

@@ -1,0 +1,234 @@
+---
+title: LangChain
+description: 'Integrate PrefID with LangChain agents'
+---
+
+## Overview
+
+LangChain provides a powerful framework for building AI agents. This guide shows how to integrate PrefID for context-aware agents.
+
+## Installation
+
+```bash
+npm install langchain @langchain/openai @prefid/sdk
+```
+
+## Basic Chat with Preferences
+
+```typescript
+import { ChatOpenAI } from '@langchain/openai';
+import { SystemMessage, HumanMessage } from '@langchain/core/messages';
+import { PrefID } from '@prefid/sdk';
+
+const prefid = new PrefID({ /* config */ });
+
+async function chatWithPreferences(
+  userMessage: string,
+  accessToken: string
+) {
+  // Get preferences
+  const hints = await prefid.getAgentHints({
+    accessToken,
+    domains: ['general_profile'],
+    maxTokens: 100
+  });
+  
+  const model = new ChatOpenAI({
+    modelName: 'gpt-4',
+    temperature: 0.7
+  });
+  
+  const response = await model.invoke([
+    new SystemMessage(`User context: ${hints.data.hints.join('. ')}`),
+    new HumanMessage(userMessage)
+  ]);
+  
+  return response.content;
+}
+```
+
+## Custom Chain with Preferences
+
+```typescript
+import { ChatOpenAI } from '@langchain/openai';
+import { ChatPromptTemplate } from '@langchain/core/prompts';
+import { StringOutputParser } from '@langchain/core/output_parsers';
+
+const prefid = new PrefID({ /* config */ });
+
+async function createPersonalizedChain(accessToken: string) {
+  const hints = await prefid.getAgentHints({
+    accessToken,
+    domains: ['music_preferences', 'general_profile']
+  });
+  
+  const prompt = ChatPromptTemplate.fromMessages([
+    ['system', `You are a music recommendation assistant.
+    
+User preferences:
+{preferences}
+
+Use these preferences for personalized recommendations.`],
+    ['human', '{question}']
+  ]);
+  
+  const model = new ChatOpenAI({ modelName: 'gpt-4' });
+  const outputParser = new StringOutputParser();
+  
+  const chain = prompt.pipe(model).pipe(outputParser);
+  
+  return {
+    invoke: (question: string) => chain.invoke({
+      preferences: hints.data.hints.join('\n'),
+      question
+    })
+  };
+}
+
+// Usage
+const chain = await createPersonalizedChain(accessToken);
+const result = await chain.invoke('Recommend songs for a road trip');
+```
+
+## Agent with PrefID Tool
+
+```typescript
+import { ChatOpenAI } from '@langchain/openai';
+import { AgentExecutor, createOpenAIFunctionsAgent } from 'langchain/agents';
+import { DynamicTool } from '@langchain/core/tools';
+import { ChatPromptTemplate } from '@langchain/core/prompts';
+
+const prefid = new PrefID({ /* config */ });
+
+// Create PrefID tools
+const getPreferencesTool = new DynamicTool({
+  name: 'get_user_preferences',
+  description: 'Get user preferences for a specific domain',
+  func: async (domain: string) => {
+    const prefs = await prefid.getPreferences(domain, { accessToken });
+    return JSON.stringify(prefs.preferences);
+  }
+});
+
+const getHintsTool = new DynamicTool({
+  name: 'get_context_hints',
+  description: 'Get summarized user context for personalization',
+  func: async () => {
+    const hints = await prefid.getAgentHints({ accessToken });
+    return hints.data.hints.join('\n');
+  }
+});
+
+// Create agent
+const prompt = ChatPromptTemplate.fromMessages([
+  ['system', 'You are a helpful assistant with access to user preferences.'],
+  ['human', '{input}'],
+  ['placeholder', '{agent_scratchpad}']
+]);
+
+const model = new ChatOpenAI({ modelName: 'gpt-4' });
+
+const agent = createOpenAIFunctionsAgent({
+  llm: model,
+  tools: [getPreferencesTool, getHintsTool],
+  prompt
+});
+
+const executor = new AgentExecutor({
+  agent,
+  tools: [getPreferencesTool, getHintsTool]
+});
+
+// Run
+const result = await executor.invoke({
+  input: 'What music do I like? Recommend some new artists.'
+});
+```
+
+## Retrieval with Preferences
+
+```typescript
+import { ChatOpenAI } from '@langchain/openai';
+import { MemoryVectorStore } from 'langchain/vectorstores/memory';
+import { OpenAIEmbeddings } from '@langchain/openai';
+import { RetrievalQAChain } from 'langchain/chains';
+
+// Create vector store with preference-aware retrieval
+async function createPreferenceAwareRetriever(
+  documents: Document[],
+  accessToken: string
+) {
+  const prefs = await prefid.getPreferences('general_profile', { accessToken });
+  
+  // Weight documents based on user interests
+  const weightedDocs = documents.map(doc => ({
+    ...doc,
+    metadata: {
+      ...doc.metadata,
+      relevance: calculateRelevance(doc, prefs.preferences.interests)
+    }
+  }));
+  
+  const vectorStore = await MemoryVectorStore.fromDocuments(
+    weightedDocs,
+    new OpenAIEmbeddings()
+  );
+  
+  return vectorStore.asRetriever({
+    searchType: 'mmr',
+    k: 5
+  });
+}
+```
+
+## Conversation Memory with Preferences
+
+```typescript
+import { ChatOpenAI } from '@langchain/openai';
+import { BufferMemory } from 'langchain/memory';
+import { ConversationChain } from 'langchain/chains';
+
+async function createPersonalizedConversation(accessToken: string) {
+  const hints = await prefid.getAgentHints({ accessToken });
+  
+  const memory = new BufferMemory({
+    memoryKey: 'history',
+    returnMessages: true
+  });
+  
+  // Inject preferences into memory
+  await memory.saveContext(
+    { input: 'system' },
+    { output: `User context: ${hints.data.hints.join('. ')}` }
+  );
+  
+  const model = new ChatOpenAI({ modelName: 'gpt-4' });
+  
+  return new ConversationChain({
+    llm: model,
+    memory,
+    verbose: true
+  });
+}
+```
+
+## Best Practices
+
+<Tip>
+  Store preferences in the conversation memory at the start of each session for consistent personalization.
+</Tip>
+
+<CardGroup cols={2}>
+  <Card title="Use Tools" icon="wrench">
+    Create tools for dynamic preference fetching
+  </Card>
+  <Card title="Context Injection" icon="syringe">
+    Inject preferences in system messages
+  </Card>
+  <Card title="Domain Filtering" icon="filter">
+    Only fetch relevant domains
+  </Card>
+  <Card title="Error Handling" icon="shield">
+    Fallback gracefully if preferences unavailable
+  </Card>
+</CardGroup>

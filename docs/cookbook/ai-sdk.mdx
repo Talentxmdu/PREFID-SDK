@@ -1,0 +1,194 @@
+---
+title: Vercel AI SDK
+description: 'Integrate PrefID with Vercel AI SDK'
+---
+
+## Overview
+
+The Vercel AI SDK provides a powerful way to build AI applications. This guide shows how to integrate PrefID for personalized AI responses.
+
+## Installation
+
+```bash
+npm install ai @ai-sdk/openai @prefid/sdk
+```
+
+## Basic Integration
+
+```typescript
+import { generateText, streamText } from 'ai';
+import { openai } from '@ai-sdk/openai';
+import { PrefID } from '@prefid/sdk';
+
+const prefid = new PrefID({
+  clientId: process.env.PREFID_CLIENT_ID,
+  clientSecret: process.env.PREFID_CLIENT_SECRET,
+});
+
+async function getPersonalizedResponse(
+  userMessage: string,
+  accessToken: string
+) {
+  // Fetch user preferences
+  const hints = await prefid.getAgentHints({
+    accessToken,
+    domains: ['general_profile', 'music_preferences'],
+    maxTokens: 100
+  });
+  
+  // Generate personalized response
+  const result = await generateText({
+    model: openai('gpt-4'),
+    system: `You are a helpful assistant. 
+    
+User context:
+${hints.data.hints.join('\n')}
+
+Use this context to personalize your responses.`,
+    prompt: userMessage
+  });
+  
+  return result.text;
+}
+```
+
+## Streaming Responses
+
+```typescript
+import { streamText } from 'ai';
+
+async function streamPersonalizedResponse(
+  userMessage: string,
+  accessToken: string
+) {
+  const hints = await prefid.getAgentHints({
+    accessToken,
+    maxTokens: 80
+  });
+  
+  const result = await streamText({
+    model: openai('gpt-4'),
+    system: `User preferences: ${hints.data.hints.join('. ')}`,
+    prompt: userMessage,
+    onChunk: ({ chunk }) => {
+      // Handle each chunk
+      process.stdout.write(chunk.text);
+    }
+  });
+  
+  return result;
+}
+```
+
+## Next.js API Route
+
+```typescript
+// app/api/chat/route.ts
+import { streamText } from 'ai';
+import { openai } from '@ai-sdk/openai';
+import { PrefID } from '@prefid/sdk';
+
+const prefid = new PrefID({ /* config */ });
+
+export async function POST(req: Request) {
+  const { messages, accessToken } = await req.json();
+  
+  // Get personalization hints
+  const hints = await prefid.getAgentHints({
+    accessToken,
+    domains: ['general_profile'],
+    maxTokens: 50
+  });
+  
+  const result = await streamText({
+    model: openai('gpt-4'),
+    system: `User context: ${hints.data.hints.join('. ')}`,
+    messages,
+  });
+  
+  return result.toDataStreamResponse();
+}
+```
+
+## React Hook
+
+```tsx
+'use client';
+
+import { useChat } from 'ai/react';
+import { usePrefID } from '@prefid/react';
+
+export function PersonalizedChat() {
+  const { accessToken } = usePrefID();
+  
+  const { messages, input, handleInputChange, handleSubmit } = useChat({
+    api: '/api/chat',
+    body: {
+      accessToken
+    }
+  });
+  
+  return (
+    <div>
+      {messages.map(m => (
+        <div key={m.id}>
+          {m.role}: {m.content}
+        </div>
+      ))}
+      
+      <form onSubmit={handleSubmit}>
+        <input value={input} onChange={handleInputChange} />
+        <button type="submit">Send</button>
+      </form>
+    </div>
+  );
+}
+```
+
+## Tool Calling with Preferences
+
+```typescript
+import { generateText, tool } from 'ai';
+import { z } from 'zod';
+
+const result = await generateText({
+  model: openai('gpt-4'),
+  system: `User preferences: ${hints.data.hints.join('. ')}`,
+  prompt: 'Find me restaurants nearby',
+  tools: {
+    searchRestaurants: tool({
+      description: 'Search for restaurants',
+      parameters: z.object({
+        cuisine: z.string().optional(),
+        dietary: z.string().optional(),
+      }),
+      execute: async ({ cuisine, dietary }) => {
+        // Use preferences for defaults
+        const prefs = await prefid.getPreferences('food_profile');
+        return searchRestaurants({
+          cuisine: cuisine || prefs.preferences.cuisines[0],
+          dietary: dietary || prefs.preferences.dietary_preference
+
+        });
+      }
+    })
+  }
+});
+```
+
+## Best Practices
+
+<CardGroup cols={2}>
+  <Card title="Cache Preferences" icon="database">
+    Cache preferences for the session to reduce API calls
+  </Card>
+  <Card title="Use Agent Hints" icon="lightbulb">
+    Use hints instead of raw preferences - they're token-optimized
+  </Card>
+  <Card title="Limit Domains" icon="filter">
+    Only fetch domains relevant to the current task
+  </Card>
+  <Card title="Handle Errors" icon="shield">
+    Gracefully handle missing preferences
+  </Card>
+</CardGroup>

@@ -1,0 +1,225 @@
+---
+title: Preferences
+description: 'Get and update user preferences'
+---
+
+## Get Preferences
+
+Retrieve preferences for a specific domain.
+
+<ParamField path="domain" type="string" required>
+  Domain to fetch (e.g., `music_preferences`, `food_profile`)
+</ParamField>
+
+<CodeGroup>
+
+```bash Request
+curl -X GET "https://api.prefid.dev/v1/preferences/music_preferences" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+```
+
+```json Response
+{
+  "success": true,
+  "data": {
+    "domain": "music_preferences",
+    "preferences": {
+      "favorite_artists": ["AR Rahman", "Coldplay", "Daft Punk"],
+      "genres": ["Indian Classical", "Electronic", "Alternative"],
+      "streaming_service": "Spotify",
+      "listening_contexts": {
+        "work": ["Lo-fi", "Instrumental"],
+        "workout": ["EDM", "Hip Hop"]
+      }
+    },
+    "confidence": 0.92,
+    "last_updated": "2024-12-19T10:30:00Z",
+    "atom_count": 23
+  }
+}
+```
+
+</CodeGroup>
+
+## Get All Preferences
+
+Retrieve all preferences across all domains.
+
+<CodeGroup>
+
+```bash Request
+curl -X GET "https://api.prefid.dev/v1/preferences" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+```
+
+```json Response
+{
+  "success": true,
+  "data": {
+    "domains": [
+      {
+        "domain": "music_preferences",
+        "preferences": { ... },
+        "confidence": 0.92
+      },
+      {
+        "domain": "food_profile",
+        "preferences": { ... },
+        "confidence": 0.88
+      }
+    ],
+    "total_atoms": 156
+  }
+}
+```
+
+</CodeGroup>
+
+## Get Preference Atoms
+
+Retrieve individual preference atoms.
+
+<ParamField query="domain" type="string">
+  Filter by domain
+</ParamField>
+
+<ParamField query="limit" type="number" default="20">
+  Number of atoms to return
+</ParamField>
+
+<ParamField query="offset" type="number" default="0">
+  Offset for pagination
+</ParamField>
+
+<CodeGroup>
+
+```bash Request
+curl -X GET "https://api.prefid.dev/v1/preferences/atoms?domain=music_preferences&limit=10" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+```
+
+```json Response
+{
+  "success": true,
+  "data": {
+    "atoms": [
+      {
+        "atom_id": "atom_abc123",
+        "domain": "music_preferences",
+        "key": "favorite_artist",
+        "value": "AR Rahman",
+        "confidence": 0.95,
+        "source": "spotify_history",
+        "created_at": "2024-12-15T08:00:00Z"
+      },
+      {
+        "atom_id": "atom_def456",
+        "domain": "music_preferences",
+        "key": "preferred_genre",
+        "value": "Indian Classical",
+        "confidence": 0.88,
+        "source": "explicit_preference",
+        "created_at": "2024-12-10T14:30:00Z"
+      }
+    ]
+  },
+  "pagination": {
+    "limit": 10,
+    "offset": 0,
+    "total": 23,
+    "has_more": true
+  }
+}
+```
+
+</CodeGroup>
+
+## Update Preferences
+
+Add or update preferences (requires `preferences:write` scope).
+
+<CodeGroup>
+
+```bash Request
+curl -X POST "https://api.prefid.dev/v1/preferences/music_preferences" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "preferences": {
+      "favorite_artists": ["AR Rahman", "Coldplay"],
+      "genres": ["Indian Classical", "Electronic"]
+    }
+  }'
+```
+
+```json Response
+{
+  "success": true,
+  "data": {
+    "atoms_created": 4,
+    "atoms_updated": 2,
+    "domain": "music_preferences"
+  }
+}
+```
+
+</CodeGroup>
+
+## Suppress Atom
+
+Mark a preference atom as incorrect (user correction).
+
+<CodeGroup>
+
+```bash Request
+curl -X POST "https://api.prefid.dev/v1/preferences/suppress" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "atom_id": "atom_abc123",
+    "reason": "not_accurate"
+  }'
+```
+
+```json Response
+{
+  "success": true,
+  "data": {
+    "atom_id": "atom_abc123",
+    "status": "suppressed",
+    "suppressed_at": "2024-12-19T11:00:00Z"
+  }
+}
+```
+
+</CodeGroup>
+
+## Export Preferences
+
+Export all user preferences as JSON.
+
+<CodeGroup>
+
+```bash Request
+curl -X GET "https://api.prefid.dev/v1/preferences/export" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+```
+
+```json Response
+{
+  "success": true,
+  "data": {
+    "user_id": "user_xxxxx",
+    "exported_at": "2024-12-19T11:00:00Z",
+    "preferences": {
+      "music_preferences": { ... },
+      "food_profile": { ... },
+      "travel_profile": { ... }
+    },
+    "atoms": [ ... ],
+    "total_atoms": 156
+  }
+}
+```
+
+</CodeGroup>

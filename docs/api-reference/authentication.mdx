@@ -1,0 +1,144 @@
+---
+title: Authentication
+description: 'OAuth 2.0 token endpoints'
+---
+
+## Token Endpoint
+
+Exchange authorization code for access tokens.
+
+<ParamField path="token" type="POST" required>
+  `POST https://api.prefid.dev/oauth/token`
+</ParamField>
+
+### Authorization Code Grant
+
+<CodeGroup>
+
+```bash Request
+curl -X POST "https://api.prefid.dev/oauth/token" \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "grant_type=authorization_code" \
+  -d "client_id=YOUR_CLIENT_ID" \
+  -d "client_secret=YOUR_CLIENT_SECRET" \
+  -d "code=AUTH_CODE" \
+  -d "redirect_uri=https://yourapp.com/callback" \
+  -d "code_verifier=PKCE_VERIFIER"
+```
+
+```json Response
+{
+  "access_token": "prefid_at_xxxxx",
+  "refresh_token": "prefid_rt_xxxxx",
+  "token_type": "Bearer",
+  "expires_in": 3600,
+  "scope": "preferences:read music_preferences"
+}
+```
+
+</CodeGroup>
+
+#### Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `grant_type` | string | Yes | Must be `authorization_code` |
+| `client_id` | string | Yes | Your OAuth client ID |
+| `client_secret` | string | Yes | Your OAuth client secret |
+| `code` | string | Yes | Authorization code from redirect |
+| `redirect_uri` | string | Yes | Must match registered URI |
+| `code_verifier` | string | Yes | PKCE code verifier |
+
+### Refresh Token Grant
+
+<CodeGroup>
+
+```bash Request
+curl -X POST "https://api.prefid.dev/oauth/token" \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "grant_type=refresh_token" \
+  -d "client_id=YOUR_CLIENT_ID" \
+  -d "client_secret=YOUR_CLIENT_SECRET" \
+  -d "refresh_token=prefid_rt_xxxxx"
+```
+
+```json Response
+{
+  "access_token": "prefid_at_new_xxxxx",
+  "refresh_token": "prefid_rt_new_xxxxx",
+  "token_type": "Bearer",
+  "expires_in": 3600,
+  "scope": "preferences:read music_preferences"
+}
+```
+
+</CodeGroup>
+
+## Token Introspection
+
+Check if a token is valid.
+
+<CodeGroup>
+
+```bash Request
+curl -X POST "https://api.prefid.dev/oauth/introspect" \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -H "Authorization: Basic BASE64(client_id:client_secret)" \
+  -d "token=prefid_at_xxxxx"
+```
+
+```json Response
+{
+  "active": true,
+  "scope": "preferences:read music_preferences",
+  "client_id": "app_xxxxx",
+  "user_id": "user_xxxxx",
+  "exp": 1703016000
+}
+```
+
+</CodeGroup>
+
+## Token Revocation
+
+Revoke an access or refresh token.
+
+<CodeGroup>
+
+```bash Request
+curl -X POST "https://api.prefid.dev/oauth/revoke" \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -H "Authorization: Basic BASE64(client_id:client_secret)" \
+  -d "token=prefid_rt_xxxxx" \
+  -d "token_type_hint=refresh_token"
+```
+
+```json Response
+{
+  "success": true
+}
+```
+
+</CodeGroup>
+
+## User Info
+
+Get information about the authenticated user.
+
+<CodeGroup>
+
+```bash Request
+curl -X GET "https://api.prefid.dev/oauth/userinfo" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+```
+
+```json Response
+{
+  "sub": "user_xxxxx",
+  "email": "user@example.com",
+  "name": "John Doe",
+  "picture": "https://pref-id.vercel.app/avatars/xxxxx.png"
+}
+```
+
+</CodeGroup>

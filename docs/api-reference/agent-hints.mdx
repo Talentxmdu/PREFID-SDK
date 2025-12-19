@@ -1,0 +1,191 @@
+---
+title: Agent Hints
+description: 'Get AI-optimized preference hints'
+---
+
+## Overview
+
+Agent Hints are pre-formatted strings optimized for AI context injection. They summarize user preferences in natural language, making it easy to include in system prompts.
+
+## Get Agent Hints
+
+<ParamField query="domains" type="string">
+  Comma-separated list of domains to include
+</ParamField>
+
+<ParamField query="max_tokens" type="number" default="100">
+  Maximum token count for hints
+</ParamField>
+
+<ParamField query="format" type="string" default="text">
+  Output format: `text`, `json`, or `bullets`
+</ParamField>
+
+<CodeGroup>
+
+```bash Request
+curl -X GET "https://api.prefid.dev/v1/agent-hints?domains=music_preferences,food_profile&max_tokens=100" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+```
+
+```json Response
+{
+  "success": true,
+  "data": {
+    "hints": [
+      "User loves AR Rahman and Indian classical music",
+      "Prefers electronic and alternative genres",
+      "Uses Spotify for music streaming",
+      "Vegetarian diet, allergic to peanuts",
+      "Enjoys South Indian and Italian cuisines"
+    ],
+    "domains_used": ["music_preferences", "food_profile"],
+    "token_count": 52,
+    "format": "text"
+  }
+}
+```
+
+</CodeGroup>
+
+## Format Options
+
+### Text Format (Default)
+
+Returns hints as a list of natural language strings.
+
+```bash
+GET /v1/agent-hints?format=text
+```
+
+```json
+{
+  "hints": [
+    "User loves AR Rahman and Indian classical music",
+    "Prefers vegetarian food"
+  ]
+}
+```
+
+### JSON Format
+
+Returns structured hint data.
+
+```bash
+GET /v1/agent-hints?format=json
+```
+
+```json
+{
+  "hints": {
+    "music_preferences": {
+      "summary": "Loves AR Rahman and Indian classical music",
+      "top_artists": ["AR Rahman", "Coldplay"],
+      "genres": ["Indian Classical", "Electronic"]
+    },
+    "food_profile": {
+      "summary": "Vegetarian, allergic to peanuts",
+      "dietary": "vegetarian",
+      "allergies": ["peanuts"]
+    }
+  }
+}
+```
+
+### Bullets Format
+
+Returns hints as markdown bullet points.
+
+```bash
+GET /v1/agent-hints?format=bullets
+```
+
+```json
+{
+  "hints": "- Loves AR Rahman and Indian classical music\n- Uses Spotify for streaming\n- Vegetarian diet\n- Allergic to peanuts"
+}
+```
+
+## Context-Aware Hints
+
+Get hints tailored for a specific context.
+
+<ParamField query="context" type="string">
+  Context for hint generation (e.g., `music_recommendation`, `restaurant_search`)
+</ParamField>
+
+<CodeGroup>
+
+```bash Request
+curl -X GET "https://api.prefid.dev/v1/agent-hints?context=music_recommendation" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+```
+
+```json Response
+{
+  "success": true,
+  "data": {
+    "hints": [
+      "When recommending music, prioritize AR Rahman and Indian classical",
+      "User enjoys electronic music for work",
+      "Prefers upbeat music for workouts",
+      "Avoid heavy metal and country music"
+    ],
+    "context": "music_recommendation",
+    "token_count": 38
+  }
+}
+```
+
+</CodeGroup>
+
+## Using Agent Hints
+
+### In System Prompts
+
+```typescript
+const hints = await fetch('/v1/agent-hints?domains=music_preferences');
+const hintsData = await hints.json();
+
+const systemPrompt = `
+You are a music recommendation assistant.
+
+User Context:
+${hintsData.data.hints.join('\n')}
+
+Based on these preferences, provide personalized recommendations.
+`;
+```
+
+### With Vercel AI SDK
+
+```typescript
+import { generateText } from 'ai';
+import { openai } from '@ai-sdk/openai';
+
+const hints = await prefid.getAgentHints({
+  domains: ['music_preferences'],
+  maxTokens: 50
+});
+
+const result = await generateText({
+  model: openai('gpt-4'),
+  system: `User preferences: ${hints.data.hints.join('. ')}`,
+  prompt: 'Recommend 5 songs for a road trip'
+});
+```
+
+## Token Optimization
+
+Agent hints are designed to be token-efficient. Use `max_tokens` to control the size:
+
+| max_tokens | Hint Detail |
+|------------|-------------|
+| 50 | Very brief (1-2 hints) |
+| 100 | Standard (3-5 hints) |
+| 200 | Detailed (5-10 hints) |
+| 500 | Comprehensive |
+
+<Tip>
+  Start with `max_tokens=100` and adjust based on your context window needs.
+</Tip>

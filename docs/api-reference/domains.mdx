@@ -1,0 +1,143 @@
+---
+title: Domains
+description: 'List and explore available preference domains'
+---
+
+## List Domains
+
+Get all available preference domains.
+
+<CodeGroup>
+
+```bash Request
+curl -X GET "https://api.prefid.dev/v1/domains" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+```
+
+```json Response
+{
+  "success": true,
+  "data": {
+    "domains": [
+      {
+        "id": "music_preferences",
+        "name": "Music Preferences",
+        "description": "Musical tastes, artists, genres, and listening habits",
+        "schema_version": "1.0",
+        "atom_count": 23
+      },
+      {
+        "id": "food_profile",
+        "name": "Food Profile",
+        "description": "Dietary preferences, cuisines, and restrictions",
+        "schema_version": "1.0",
+        "atom_count": 18
+      },
+      {
+        "id": "travel_profile",
+        "name": "Travel Profile",
+        "description": "Travel preferences, airlines, and destinations",
+        "schema_version": "1.0",
+        "atom_count": 12
+      },
+      {
+        "id": "coding_profile",
+        "name": "Coding Profile",
+        "description": "Programming languages, tools, and style preferences",
+        "schema_version": "1.0",
+        "atom_count": 31
+      },
+      {
+        "id": "finance_profile",
+        "name": "Finance Profile",
+        "description": "Investment style and financial preferences",
+        "schema_version": "1.0",
+        "atom_count": 8
+      },
+      {
+        "id": "general_profile",
+        "name": "General Profile",
+        "description": "General preferences and communication style",
+        "schema_version": "1.0",
+        "atom_count": 15
+      }
+    ]
+  }
+}
+```
+
+</CodeGroup>
+
+## Get Domain Schema
+
+Get the schema for a specific domain.
+
+<CodeGroup>
+
+```bash Request
+curl -X GET "https://api.prefid.dev/v1/domains/music_preferences/schema" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+```
+
+```json Response
+{
+  "success": true,
+  "data": {
+    "domain": "music_preferences",
+    "version": "1.0",
+    "properties": {
+      "favorite_artists": {
+        "type": "array",
+        "items": { "type": "string" },
+        "description": "List of favorite artists"
+      },
+      "genres": {
+        "type": "array",
+        "items": { "type": "string" },
+        "description": "Preferred music genres"
+      },
+      "streaming_service": {
+        "type": "string",
+        "enum": ["Spotify", "Apple Music", "YouTube Music", "Other"],
+        "description": "Primary music streaming service"
+      },
+      "listening_contexts": {
+        "type": "object",
+        "description": "Music preferences by context (work, workout, etc.)"
+      }
+    }
+  }
+}
+```
+
+</CodeGroup>
+
+## Domain Statistics
+
+Get statistics for a specific domain.
+
+<CodeGroup>
+
+```bash Request
+curl -X GET "https://api.prefid.dev/v1/domains/music_preferences/stats" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+```
+
+```json Response
+{
+  "success": true,
+  "data": {
+    "domain": "music_preferences",
+    "atom_count": 23,
+    "last_updated": "2024-12-19T10:30:00Z",
+    "confidence_avg": 0.87,
+    "sources": {
+      "spotify_history": 15,
+      "explicit_preference": 5,
+      "inferred": 3
+    }
+  }
+}
+```
+
+</CodeGroup>

@@ -1,0 +1,98 @@
+{
+    "$schema": "https://mintlify.com/schema.json",
+    "name": "PrefID Documentation",
+    "logo": {
+        "dark": "/logo/dark.svg",
+        "light": "/logo/light.svg"
+    },
+    "favicon": "/favicon.svg",
+    "colors": {
+        "primary": "#E67E22",
+        "light": "#F5A623",
+        "dark": "#D35400",
+        "anchors": {
+            "from": "#E67E22",
+            "to": "#D35400"
+        }
+    },
+    "topbarLinks": [
+        {
+            "name": "Dashboard",
+            "url": "https://pref-id.vercel.app/developer"
+        }
+    ],
+    "topbarCtaButton": {
+        "name": "Get Started",
+        "url": "https://pref-id.vercel.app/onboarding"
+    },
+    "tabs": [
+        {
+            "name": "API Reference",
+            "url": "api-reference"
+        },
+        {
+            "name": "Cookbook",
+            "url": "cookbook"
+        }
+    ],
+    "anchors": [
+        {
+            "name": "GitHub",
+            "icon": "github",
+            "url": "https://github.com/prefid"
+        },
+        {
+            "name": "Developer Portal",
+            "icon": "code",
+            "url": "https://pref-id.vercel.app/developer"
+        }
+    ],
+    "navigation": [
+        {
+            "group": "Getting Started",
+            "pages": [
+                "introduction",
+                "quickstart",
+                "concepts"
+            ]
+        },
+        {
+            "group": "Integration",
+            "pages": [
+                "integration/oauth",
+                "integration/sdk",
+                "integration/mcp"
+            ]
+        },
+        {
+            "group": "Guides",
+            "pages": [
+                "guides/domains",
+                "guides/security",
+                "guides/examples"
+            ]
+        },
+        {
+            "group": "API Reference",
+            "pages": [
+                "api-reference/introduction",
+                "api-reference/authentication",
+                "api-reference/preferences",
+                "api-reference/domains",
+                "api-reference/agent-hints"
+            ]
+        },
+        {
+            "group": "Cookbook",
+            "pages": [
+                "cookbook/ai-sdk",
+                "cookbook/langchain",
+                "cookbook/custom-agents"
+            ]
+        }
+    ],
+    "footerSocials": {
+        "x": "https://x.com/prefid",
+        "github": "https://github.com/prefid"
+    }
+}

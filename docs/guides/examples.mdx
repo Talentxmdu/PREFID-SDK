@@ -1,0 +1,191 @@
+---
+title: Examples
+description: 'Real-world integration examples'
+---
+
+## Music Recommendation Bot
+
+A Discord bot that recommends music based on user preferences.
+
+```typescript
+import { Client, GatewayIntentBits } from 'discord.js';
+import { PrefID } from '@prefid/sdk';
+import { generateText } from 'ai';
+import { openai } from '@ai-sdk/openai';
+
+const prefid = new PrefID({
+  clientId: process.env.PREFID_CLIENT_ID,
+  clientSecret: process.env.PREFID_CLIENT_SECRET,
+});
+
+const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+
+client.on('interactionCreate', async (interaction) => {
+  if (!interaction.isChatInputCommand()) return;
+  
+  if (interaction.commandName === 'recommend') {
+    // Get user's PrefID token (stored during OAuth)
+    const userToken = await getUserToken(interaction.user.id);
+    
+    if (!userToken) {
+      return interaction.reply('Please connect your PrefID first: /connect');
+    }
+    
+    // Fetch music preferences
+    const hints = await prefid.getAgentHints({
+      accessToken: userToken,
+      domains: ['music_preferences'],
+      maxTokens: 100
+    });
+    
+    // Generate recommendations
+    const result = await generateText({
+      model: openai('gpt-4'),
+      system: `You are a music expert. User preferences: ${hints.hints.join('. ')}`,
+      prompt: interaction.options.getString('mood') || 'Recommend 5 songs'
+    });
+    
+    await interaction.reply(result.text);
+  }
+});
+```
+
+---
+
+## Restaurant Finder
+
+A web app that finds restaurants matching dietary preferences.
+
+```typescript
+// pages/api/restaurants.ts
+import { PrefID } from '@prefid/sdk';
+
+export async function GET(req: Request) {
+  const accessToken = req.headers.get('Authorization')?.split(' ')[1];
+  
+  const prefid = new PrefID({ /* config */ });
+  
+  // Get food preferences
+  const foodPrefs = await prefid.getPreferences('food_profile', {
+    accessToken
+  });
+  
+  // Build search parameters
+  const searchParams = {
+    cuisine: foodPrefs.preferences.cuisines,
+    dietary: foodPrefs.preferences.dietary_preference,
+    exclude: foodPrefs.preferences.allergies,
+  };
+  
+  // Search restaurants (using your restaurant API)
+  const restaurants = await searchRestaurants(searchParams);
+  
+  return Response.json({ restaurants });
+}
+```
+
+---
+
+## Personalized Code Assistant
+
+A VS Code extension that uses coding preferences.
+
+```typescript
+// extension.ts
+import * as vscode from 'vscode';
+import { PrefID } from '@prefid/sdk';
+
+export function activate(context: vscode.ExtensionContext) {
+  const prefid = new PrefID({ /* config */ });
+  
+  // Command to get personalized code suggestions
+  const disposable = vscode.commands.registerCommand(
+    'prefid.suggest',
+    async () => {
+      const token = await context.secrets.get('prefid_token');
+      
+      // Get coding preferences
+      const codingPrefs = await prefid.getPreferences('coding_profile', {
+        accessToken: token
+      });
+      
+      const editor = vscode.window.activeTextEditor;
+      if (!editor) return;
+      
+      const selection = editor.document.getText(editor.selection);
+      
+      // Generate suggestion using preferences
+      const suggestion = await generateCodeSuggestion(
+        selection,
+        codingPrefs.preferences
+      );
+      
+      // Insert suggestion
+      editor.edit(editBuilder => {
+        editBuilder.replace(editor.selection, suggestion);
+      });
+    }
+  );
+  
+  context.subscriptions.push(disposable);
+}
+```
+
+---
+
+## Travel Planner Chatbot
+
+A chatbot that plans trips based on travel preferences.
+
+```typescript
+import { ChatOpenAI } from '@langchain/openai';
+import { ConversationChain } from 'langchain/chains';
+import { PrefID } from '@prefid/sdk';
+
+async function createTravelBot(userId: string) {
+  const prefid = new PrefID({ /* config */ });
+  const token = await getUserToken(userId);
+  
+  // Get travel preferences
+  const travelPrefs = await prefid.getPreferences('travel_profile', {
+    accessToken: token
+  });
+  
+  const { preferences } = travelPrefs;
+  
+  const systemPrompt = `
+You are a travel planning assistant. 
+
+User's travel preferences:
+- Preferred airlines: ${preferences.preferred_airlines?.join(', ')}
+- Seat preference: ${preferences.seat_preference}
+- Travel style: ${preferences.travel_style}
+- Destination types: ${preferences.destination_types?.join(', ')}
+
+Use these preferences when suggesting trips, flights, and accommodations.
+  `;
+  
+  const model = new ChatOpenAI({ modelName: 'gpt-4' });
+  
+  return new ConversationChain({
+    llm: model,
+    systemMessage: systemPrompt
+  });
+}
+```
+
+---
+
+## More Examples
+
+<CardGroup cols={2}>
+  <Card title="AI SDK Cookbook" icon="sparkles" href="/cookbook/ai-sdk">
+    Vercel AI SDK integration patterns
+  </Card>
+  <Card title="LangChain Cookbook" icon="link" href="/cookbook/langchain">
+    LangChain agent integration
+  </Card>
+  <Card title="Custom Agents" icon="robot" href="/cookbook/custom-agents">
+    Building custom AI agents
+  </Card>
+</CardGroup>
