@@ -1,0 +1,500 @@
+---
+title: Profile Catalog
+description: 'Complete reference of all PrefID preference profiles'
+---
+
+## Overview
+
+PrefID organizes user preferences into **profiles** — structured collections of preference atoms that define how AI agents should interact with users. Each profile serves a specific purpose and can be selectively exposed to different agents and companies.
+
+## Core Behavioral Profiles
+
+These profiles control **how AI reasons and interacts** with users. They're the highest-value profiles for AI agents.
+
+<AccordionGroup>
+  <Accordion title="thinking_profile" icon="brain">
+    **Purpose:** Controls how AI structures reasoning and responses
+    
+    | Atom | Description |
+    |------|-------------|
+    | `prefers_stepwise_reasoning` | Show step-by-step thought process |
+    | `prefers_summary_first` | Lead with conclusions, details after |
+    | `prefers_decision_recommendation` | Provide clear recommendations |
+    
+    **Useful for:** OpenAI, Anthropic, IDEs, Enterprise copilots  
+    **Consumed by:** ChatGPT, Claude, Coding agents, Strategy agents
+  </Accordion>
+
+  <Accordion title="communication_profile" icon="message">
+    **Purpose:** Defines tone, formality, and brevity preferences
+    
+    | Atom | Description |
+    |------|-------------|
+    | `prefers_direct_tone` | Get to the point quickly |
+    | `dislikes_fluff` | Avoid unnecessary pleasantries |
+    | `formal_language` | Use professional language |
+    
+    **Useful for:** Customer support platforms, CRM tools  
+    **Consumed by:** Support bots, Sales bots, HR assistants
+  </Accordion>
+
+  <Accordion title="initiative_profile" icon="hand">
+    **Purpose:** Determines who drives the interaction
+    
+    | Atom | Description |
+    |------|-------------|
+    | `agent_should_suggest` | AI proactively offers suggestions |
+    | `agent_should_wait` | AI waits for explicit prompts |
+    
+    **Useful for:** Agent platforms, workflow automation  
+    **Consumed by:** Autonomous agents, Task planners
+  </Accordion>
+
+  <Accordion title="clarity_profile" icon="eye">
+    **Purpose:** Precision vs ambiguity tolerance
+    
+    | Atom | Description |
+    |------|-------------|
+    | `demands_precision` | Requires exact, detailed answers |
+    | `tolerates_ambiguity` | Comfortable with uncertainty |
+    
+    **Useful for:** Legal tech, research platforms  
+    **Consumed by:** Legal AI, Research assistants
+  </Accordion>
+
+  <Accordion title="pace_profile" icon="gauge">
+    **Purpose:** Speed vs depth of interaction
+    
+    | Atom | Description |
+    |------|-------------|
+    | `fast_iterations` | Quick back-and-forth preferred |
+    | `deep_deliberation` | Thorough, slower exploration |
+    
+    **Useful for:** Developer tools, startup tooling  
+    **Consumed by:** Coding agents, Product managers
+  </Accordion>
+
+  <Accordion title="decision_profile" icon="scale">
+    **Purpose:** How decisions should conclude
+    
+    | Atom | Description |
+    |------|-------------|
+    | `single_recommendation` | Give one clear answer |
+    | `wants_tradeoffs` | Present options with pros/cons |
+    
+    **Useful for:** Consulting AI, finance tools  
+    **Consumed by:** Advisory agents, Strategy bots
+  </Accordion>
+
+  <Accordion title="error_tolerance_profile" icon="triangle-exclamation">
+    **Purpose:** Reaction to AI mistakes
+    
+    | Atom | Description |
+    |------|-------------|
+    | `zero_tolerance` | Errors are unacceptable |
+    | `fail_fast` | Prefer quick failure over slow uncertainty |
+    
+    **Useful for:** Fintech, infrastructure tools  
+    **Consumed by:** Infra agents, Finance bots
+  </Accordion>
+
+  <Accordion title="autonomy_profile" icon="robot">
+    **Purpose:** Permission levels for AI actions
+    
+    | Atom | Description |
+    |------|-------------|
+    | `wants_ai_initiative` | AI can act independently |
+    | `confirm_before_actions` | Always ask before doing |
+    
+    **Useful for:** Automation platforms  
+    **Consumed by:** Action-taking agents
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Content & Domain Profiles
+
+These profiles capture **preferences within specific life domains**. Selectively exposed based on app context.
+
+<AccordionGroup>
+  <Accordion title="travel_profile" icon="plane">
+    **Purpose:** Travel style and constraints
+    
+    | Atom | Description |
+    |------|-------------|
+    | `adventure_focused` | Prefers unique experiences |
+    | `moderate_budget` | Mid-range spending |
+    | `prefers_airbnb` | Home rentals over hotels |
+    
+    **Useful for:** Booking.com, Airbnb, travel startups  
+    **Consumed by:** Travel planners, Concierge agents
+  </Accordion>
+
+  <Accordion title="food_profile" icon="utensils">
+    **Purpose:** Diet and food behavior
+    
+    | Atom | Description |
+    |------|-------------|
+    | `prefers_light_food` | Avoids heavy meals |
+    | `vegetarian_friendly` | Plant-based preferences |
+    | `spice_tolerance_high` | Enjoys spicy food |
+    
+    **Useful for:** Food delivery, hospitality  
+    **Consumed by:** Food recommendation agents
+  </Accordion>
+
+  <Accordion title="music_preferences" icon="music">
+    **Purpose:** Listening patterns
+    
+    | Atom | Description |
+    |------|-------------|
+    | `cinematic_music` | Epic, orchestral preferences |
+    | `low_energy` | Calm, relaxing music |
+    | `genre_indian_classical` | Cultural preferences |
+    
+    **Useful for:** Spotify, Apple Music  
+    **Consumed by:** Playlist agents
+  </Accordion>
+
+  <Accordion title="shopping_profile" icon="cart-shopping">
+    **Purpose:** Brands, size, spending style
+    
+    | Atom | Description |
+    |------|-------------|
+    | `avoids_luxury` | Price-conscious |
+    | `brand_loyal` | Sticks to known brands |
+    | `size_medium` | Clothing size info |
+    
+    **Useful for:** Shopify merchants  
+    **Consumed by:** Commerce agents
+  </Accordion>
+
+  <Accordion title="entertainment_profile" icon="film">
+    **Purpose:** Movies, shows, gaming
+    
+    | Atom | Description |
+    |------|-------------|
+    | `prefers_slow_burn` | Loves character development |
+    | `avoids_horror` | Genre exclusions |
+    
+    **Useful for:** Streaming platforms  
+    **Consumed by:** Content discovery agents
+  </Accordion>
+
+  <Accordion title="fitness_profile" icon="dumbbell">
+    **Purpose:** Physical activity patterns
+    
+    | Atom | Description |
+    |------|-------------|
+    | `hiking_focused` | Outdoor activities |
+    | `recovery_days` | Rest preferences |
+    
+    **Useful for:** Health apps, wearables  
+    **Consumed by:** Fitness coaches
+  </Accordion>
+
+  <Accordion title="health_profile" icon="heart-pulse">
+    **Purpose:** Wellness preferences (non-medical)
+    
+    | Atom | Description |
+    |------|-------------|
+    | `avoids_heavy_food` | Dietary wellness |
+    | `prefers_low_stress` | Calm environments |
+    
+    **Useful for:** Wellness startups  
+    **Consumed by:** Health advisory agents
+  </Accordion>
+
+  <Accordion title="fashion_profile" icon="shirt">
+    **Purpose:** Style & apparel preferences
+    
+    | Atom | Description |
+    |------|-------------|
+    | `minimal_style` | Clean, simple aesthetics |
+    | `neutral_colors` | Color preferences |
+    
+    **Useful for:** Fashion brands, Myntra  
+    **Consumed by:** Styling agents
+  </Accordion>
+
+  <Accordion title="reading_profile" icon="book">
+    **Purpose:** Books & learning content
+    
+    | Atom | Description |
+    |------|-------------|
+    | `prefers_nonfiction` | Genre preference |
+    | `long_form_content` | Article length preference |
+    
+    **Useful for:** Publishers, EdTech  
+    **Consumed by:** Reading recommendation agents
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Professional / B2B Profiles
+
+These profiles serve **enterprise and productivity** use cases.
+
+<AccordionGroup>
+  <Accordion title="coding_profile" icon="code">
+    **Purpose:** Development stack and coding style
+    
+    | Atom | Description |
+    |------|-------------|
+    | `prefers_typescript` | Language preference |
+    | `avoids_prisma` | ORM preference |
+    | `functional_style` | Coding paradigm |
+    
+    **Useful for:** GitHub, IDEs, SaaS dev tools  
+    **Consumed by:** Coding assistants
+  </Accordion>
+
+  <Accordion title="career_profile" icon="briefcase">
+    **Purpose:** Career goals and skills
+    
+    | Atom | Description |
+    |------|-------------|
+    | `growth_oriented` | Career motivation |
+    | `leadership_track` | Management aspiration |
+    
+    **Useful for:** LinkedIn, Coursera  
+    **Consumed by:** Career advisors
+  </Accordion>
+
+  <Accordion title="learning_profile" icon="graduation-cap">
+    **Purpose:** Learning style preferences
+    
+    | Atom | Description |
+    |------|-------------|
+    | `prefers_examples_over_theory` | Learning method |
+    | `visual_learner` | Content format |
+    
+    **Useful for:** EdTech platforms  
+    **Consumed by:** Tutors
+  </Accordion>
+
+  <Accordion title="productivity_profile" icon="clock">
+    **Purpose:** Work habits
+    
+    | Atom | Description |
+    |------|-------------|
+    | `deep_work_blocks` | Focus time preference |
+    | `async_communication` | Communication style |
+    
+    **Useful for:** Enterprise SaaS  
+    **Consumed by:** Work assistants
+  </Accordion>
+
+  <Accordion title="collaboration_profile" icon="users">
+    **Purpose:** Team vs solo work style
+    
+    | Atom | Description |
+    |------|-------------|
+    | `solo_operator` | Independent work preference |
+    | `consensus_seeker` | Team decision style |
+    
+    **Useful for:** GitHub, Jira  
+    **Consumed by:** Team agents
+  </Accordion>
+
+  <Accordion title="confidence_profile" icon="user-check">
+    **Purpose:** Reliance on AI
+    
+    | Atom | Description |
+    |------|-------------|
+    | `seeks_validation` | Wants AI confirmation |
+    | `independent_thinker` | Uses AI as tool, not authority |
+    
+    **Useful for:** Coaching platforms  
+    **Consumed by:** Coaching agents
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Meta & Governance Profiles
+
+These profiles define **boundaries and constraints** for AI behavior. This is PrefID's competitive moat.
+
+<AccordionGroup>
+  <Accordion title="memory_scope_profile" icon="database">
+    **Purpose:** What AI can remember
+    
+    | Atom | Description |
+    |------|-------------|
+    | `explicit_memory_only` | Only remember what user says to |
+    | `session_only` | Forget after conversation |
+    
+    **Useful for:** Privacy-first platforms  
+    **Consumed by:** All agents
+  </Accordion>
+
+  <Accordion title="constraint_profile" icon="lock">
+    **Purpose:** Hard vs soft limits
+    
+    | Atom | Description |
+    |------|-------------|
+    | `hard_constraints` | Non-negotiable limits |
+    | `deadline_driven` | Time-bound decisions |
+    
+    **Useful for:** Planning software  
+    **Consumed by:** Scheduling agents
+  </Accordion>
+
+  <Accordion title="authority_profile" icon="shield">
+    **Purpose:** How authoritative AI can be
+    
+    | Atom | Description |
+    |------|-------------|
+    | `accepts_directives` | AI can give commands |
+    | `advisory_only` | AI only suggests, never commands |
+    
+    **Useful for:** Enterprise AI  
+    **Consumed by:** Executive agents
+  </Accordion>
+
+  <Accordion title="compliance_profile" icon="file-contract">
+    **Purpose:** Regulatory sensitivity
+    
+    | Atom | Description |
+    |------|-------------|
+    | `requires_citations` | Needs sources for claims |
+    | `audit_ready` | Maintains decision trail |
+    
+    **Useful for:** Banks, Healthcare  
+    **Consumed by:** Compliance agents
+  </Accordion>
+
+  <Accordion title="feedback_style_profile" icon="comment">
+    **Purpose:** How feedback is delivered
+    
+    | Atom | Description |
+    |------|-------------|
+    | `direct_feedback` | Blunt, honest feedback |
+    | `gentle_feedback` | Softened delivery |
+    
+    **Useful for:** Coaching apps  
+    **Consumed by:** Mentorship agents
+  </Accordion>
+
+  <Accordion title="goal_horizon_profile" icon="bullseye">
+    **Purpose:** Short vs long term intent
+    
+    | Atom | Description |
+    |------|-------------|
+    | `long_term_planner` | Strategic thinking |
+    | `opportunistic` | Tactical, flexible |
+    
+    **Useful for:** Strategy platforms  
+    **Consumed by:** Planning agents
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Emerging Profiles
+
+Experimental profiles with high upside. Ship carefully.
+
+<AccordionGroup>
+  <Accordion title="exploration_profile" icon="compass">
+    **Purpose:** Novelty appetite
+    
+    | Atom | Description |
+    |------|-------------|
+    | `novelty_seeking` | Wants new experiences |
+    | `prefers_familiar` | Sticks to known |
+    
+    **Useful for:** Travel, discovery startups  
+    **Consumed by:** Discovery agents
+  </Accordion>
+
+  <Accordion title="environment_profile" icon="temperature-half">
+    **Purpose:** Physical context sensitivity
+    
+    | Atom | Description |
+    |------|-------------|
+    | `altitude_sensitive` | Health at altitude |
+    | `heat_averse` | Temperature preference |
+    
+    **Useful for:** Outdoor platforms  
+    **Consumed by:** Context-aware agents
+  </Accordion>
+
+  <Accordion title="resource_profile" icon="wifi">
+    **Purpose:** Available resources
+    
+    | Atom | Description |
+    |------|-------------|
+    | `low_bandwidth` | Limited connectivity |
+    | `offline_mode` | Works without internet |
+    
+    **Useful for:** Emerging markets apps  
+    **Consumed by:** Offline agents
+  </Accordion>
+
+  <Accordion title="taste_maturity_profile" icon="gem">
+    **Purpose:** Sophistication level
+    
+    | Atom | Description |
+    |------|-------------|
+    | `refined_preferences` | Discerning taste |
+    | `trend_fatigue` | Avoids hype |
+    
+    **Useful for:** Luxury & culture brands  
+    **Consumed by:** Curation agents
+  </Accordion>
+
+  <Accordion title="initiative_boundary_profile" icon="stop">
+    **Purpose:** Agent boundary limits
+    
+    | Atom | Description |
+    |------|-------------|
+    | `do_not_assume_intent` | Never infer user intent |
+    
+    **Useful for:** Enterprise  
+    **Consumed by:** Guardrail agents
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Accessing Profiles
+
+```typescript
+// Get a specific profile
+const thinkingProfile = await prefid.getPreferences('thinking_profile', {
+  accessToken: userToken
+});
+
+// Get multiple profiles
+const profiles = await prefid.getPreferences([
+  'thinking_profile',
+  'communication_profile',
+  'autonomy_profile'
+], {
+  accessToken: userToken
+});
+
+// Get agent hints (summarized for context injection)
+const hints = await prefid.getAgentHints({
+  accessToken: userToken,
+  domains: ['thinking_profile', 'communication_profile'],
+  maxTokens: 100
+});
+```
+
+## Scope Requirements
+
+Each profile requires its corresponding scope:
+
+```
+thinking_profile → thinking:read
+communication_profile → communication:read
+travel_profile → travel:read
+// etc.
+```
+
+Request only the scopes you need.

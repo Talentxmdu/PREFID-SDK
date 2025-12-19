@@ -67,6 +67,7 @@
         {
             "group": "Guides",
             "pages": [
+                "guides/profile-catalog",
                 "guides/domains",
                 "guides/security",
                 "guides/examples"
