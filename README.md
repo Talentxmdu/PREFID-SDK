@@ -1,7 +1,6 @@
 # @prefid/sdk
 
-> Identity-aware Cognitive Infrastructure. We replace raw memory with structured, verified user context.
-> The Cognitive Identity Layer for AI Agents. Secure, portable context that governs how AI behaves
+> Identity-aware AI memory infrastructure. Portable user preferences for any app or agent.
 
 [![npm version](https://badge.fury.io/js/@prefid%2Fsdk.svg)](https://www.npmjs.com/package/@prefid/sdk)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -126,78 +125,6 @@ console.log(result.content);
 console.log(result.preferences_used);
 ```
 
-## Thinking Profile (AoT)
-
-**NEW in v0.2.0:** Learn and apply thinking preferences that govern HOW AI responds.
-
-### Get Thinking Profile
-
-```typescript
-const profile = await prefid.getThinkingProfile();
-
-console.log(profile.atoms); 
-// [{ 
-//   atom: 'prefers_stepwise_reasoning',
-//   priority_bucket:' ordering',
-//   confidence: 0.7,
-//   lifecycle_state: 'active'
-// }]
-```
-
-### Learn Thinking Preferences
-
-```typescript
-// AI will learn your thinking preference
-await prefid.learnThought('I prefer step-by-step explanations');
-await prefid.learnThought('I like a recommendation, not multiple options');
-```
-
-### Get Agent Hints
-
-Clean contract for AI agents - no internals, just behavior values:
-
-```typescript
-const hints = await prefid.getAgentHints();
-
-console.log(hints);
-// {
-//   contract_version: 'v1',
-//   reasoning: 'stepwise',
-//   verbosity: 'default',
-//   decision: 'recommend',
-//   autonomy: 'default',
-//   description: 'Structure responses step-by-step. Give one clear recommendation.',
-//   atom_count: 2
-// }
-```
-
-### Introspection (Why)
-
-Get explanation of current AI behavior:
-
-```typescript
-const why = await prefid.getWhy();
-
-console.log(why.explanation);
-// "I'm responding this way because you prefer step-by-step explanations..."
-
-console.log(why.active_atoms);
-// [{ atom: 'prefers_stepwise_reasoning', bucket: 'ordering', effect: '...' }]
-```
-
-### Learning Budget
-
-Check usage status:
-
-```typescript
-const budget = await prefid.getBudgetStatus('thinking_profile');
-
-console.log(`${budget.remaining}/${budget.monthly_cap} atoms remaining`);
-// "8/10 atoms remaining"
-
-console.log(budget.cooldown_active); // false
-```
-
 ## Configuration
 
 ```typescript
@@ -265,32 +192,9 @@ try {
 }
 ```
 
-## LangChain Integration
-
-Official integration for building preference-aware LangChain agents:
-
-```bash
-pip install langchain-prefid
-```
-
-```python
-from langchain_prefid import create_prefid_tools
-
-# 1. Create tools
-tools = create_prefid_tools(
-    client_id="...",
-    access_token="..."
-)
-
-# 2. Add to your agent
-agent = create_tool_calling_agent(llm, tools, prompt)
-```
-
-[LangChain package docs →](https://github.com/Talentxmdu/PREFID-SDK/tree/main/langchain-prefid)
-
 ## React Integration
 
-React hooks and components for seamless PrefID integration:
+For React apps, use `@prefid/react`:
 
 ```bash
 npm install @prefid/react
@@ -302,113 +206,33 @@ import { PrefIDProvider, usePreferences, LoginButton } from '@prefid/react';
 function App() {
   return (
     <PrefIDProvider clientId="your-client-id">
-      <LoginButton />
       <MyComponent />
     </PrefIDProvider>
   );
 }
 
 function MyComponent() {
-  const { data: food, isLoading, update } = usePreferences('food_profile');
+  const { data: food, isLoading } = usePreferences('food_profile');
   
   if (isLoading) return <div>Loading...</div>;
   
-  return (
-    <div>
-      <p>Cuisines: {food?.cuisines?.join(', ')}</p>
-      <button onClick={() => update({ cuisines: ['Italian', 'Japanese'] })}>
-        Update
-      </button>
-    </div>
-  );
+  return <div>Favorite cuisines: {food?.cuisines?.join(', ')}</div>;
 }
 ```
 
-[React package docs →](https://github.com/Talentxmdu/PREFID-SDK/tree/main/packages/react)
-
 ## Getting a Client ID
 
-1. Visit [pref-id.vercel.app](https://pref-id.vercel.app)
+1. Visit [prefid.in](https://prefid.in)
 2. Sign up / Login
 3. Go to Developer Settings
 4. Create an OAuth Application
 5. Copy your Client ID
 
-## Use Cases
-
-PrefID powers personalization across multiple domains:
-
-- **🎵 Music Apps** - Spotify, Apple Music integrations for personalized recommendations
-- **🍕 Food Delivery** - DoorDash, Uber Eats for dietary preferences and cuisine matching
-- **✈️ Travel Booking** - Expedia, Airbnb for travel style and accommodation preferences
-- **💻 Developer Tools** - IDE plugins, code assistants with coding style preferences
-- **💰 Finance Apps** - Investment platforms with risk tolerance and goals
-- **📈 Career Platforms** - LinkedIn, job boards with career goals and work style
-
-[See all use cases →](https://pref-id.vercel.app/use-cases)
-
-## Semantic Firewall™
-
-PrefID uses a **Semantic Firewall™** to prevent memory corruption:
-
-- ✅ **Domain Isolation** - Music can't leak into finance
-- ✅ **Deterministic Routing** - 335+ curated terms mapped to domains
-- ✅ **No Hallucination** - Overrides LLM guessing with vocabulary registry
-- ✅ **Zero Cross-Contamination** - AR Rahman stays in `music_preferences`, not `food_profile`
-
-Unlike memory APIs that store unstructured blobs, PrefID enforces strict boundaries.
-
-## Integrations
-
-### CustomGPT
-
-Add PrefID to ChatGPT:
-
-🤖 **[PrefID Assistant](https://chatgpt.com/g/g-694008c8de188191bebc93b737d40af3-prefid-assistant)** - Official ChatGPT integration
-
-### MCP (Model Context Protocol)
-
-Use PrefID with Claude Desktop:
-
-```bash
-npm install -g @prefid/mcp
-```
-
-[Setup Guide →](https://github.com/Talentxmdu/PREFID-SDK/tree/main/mcp)
-
-### AI Agents
-
-PrefID works with any AI agent framework:
-- LangChain
-- AutoGPT
-- CrewAI
-- Semantic Kernel
-
-### Shopify Apps
-
-Build personalized Shopify experiences with PrefID's e-commerce integrations.
-
-## Stats
-
-🎉 **104 weekly downloads** - Launched 3 days ago!
-
-Thank you to our early adopters building with PrefID.
-
-## Support
-
-Questions? Reach out:
-
-📧 **sriram.srinivasdesikan@gmail.com**
-
 ## Links
 
-- 🌐 [Website](https://pref-id.vercel.app)
-- 📖 [Documentation](https://pref-id.vercel.app/docs)
-- 💬 [Why PrefID?](https://pref-id.vercel.app/why)
-- 💰 [Pricing](https://pref-id.vercel.app/pricing)
-- 🐙 [GitHub (SDK)](https://github.com/Talentxmdu/PREFID-SDK)
-- 🤖 [CustomGPT](https://chatgpt.com/g/g-694008c8de188191bebc93b737d40af3-prefid-assistant)
-- 🔌 [MCP Server](https://github.com/Talentxmdu/PREFID-SDK/tree/main/mcp)
+- [Documentation](https://prefid.in/docs)
+- [GitHub](https://github.com/Talentxmdu/PrefID)
+- [API Reference](https://prefid-production.up.railway.app/docs)
 
 ## License
 
